@@ -23,8 +23,16 @@ struct Firefly {
 			
 		}
 	  
-		print(authManager.token ?? "No Token")
-		print(authManager.expires ?? "No Expires Date")
+		
+		let apiInterface : FireflyApiInterface = FireflyApiInterface(fireflyClientId: Secrets.fireflyClientId, authToken: authManager.token)
+		
+		let response : GenerateImageResponse = try await apiInterface.generateImage(prompt: "a rocketship on the way to the moon")
+		
+		
+		print("hi")
+		
+		//print(authManager.token ?? "No Token")
+		//print(authManager.expires ?? "No Expires Date")
 	  
   }
 }

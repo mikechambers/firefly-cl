@@ -10,8 +10,9 @@ import Foundation
 struct ApiClient {
 	
 	private var urlSession : URLSession
+	let userAgent : String = "Firefly Command Line App"
 	
-	init() {
+	init(fireflyClientId:String? = nil, authToken:String? = nil) {
 		let config : URLSessionConfiguration = URLSessionConfiguration.default
 		
 		config.httpCookieStorage = nil
@@ -24,14 +25,19 @@ struct ApiClient {
 		config.waitsForConnectivity = true
 		
 		
-		/*
-		if sendApiKeyHeader {
-			config.httpAdditionalHeaders = [
-				"User-Agent": userAgent,
-				"X-API-Key": destinyApiKeyStorage
-			]
+		var headers : [String: String] = [
+			"User-Agent": userAgent
+		]
+		
+		if let id = fireflyClientId {
+			headers["X-API-Key"] = id
 		}
-		 */
+		
+		if let auth = authToken {
+			headers["Authorization"] = auth
+		}
+		
+		config.httpAdditionalHeaders = headers
 		
 		urlSession = URLSession(configuration: config)
 	}
@@ -45,9 +51,19 @@ struct ApiClient {
 		let urlRequest : URLRequest = try createUrlEncodedPostRequest(url:url, data: data)
 		
 		let out:T = try await call(urlRequest: urlRequest)
-	
+		
 		return out
 	}
+	
+	func postJson<T:Codable>(url:URL, data:Codable) async throws -> T {
+		let urlRequest : URLRequest = try createJsonPostRequest(url: url, data: data)
+		
+		let out:T = try await call(urlRequest: urlRequest)
+		
+		return out
+	}
+ 
+
 	
 	/*
 	func postRawUrlEncoded(url:URL, data:[String:String]) async throws -> String {
@@ -132,15 +148,40 @@ struct ApiClient {
 		return body
 	}
 	
+	
+	private func createJsonPostRequest(url:URL, data:Codable) throws -> URLRequest {
+		var urlRequest:URLRequest = URLRequest(url:url)
+		
+		urlRequest.httpMethod = "POST"
+		urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		
+		let encoder = JSONEncoder()
+		
+		do {
+			let encoded = try encoder.encode(data)
+			urlRequest.httpBody = encoded
+		} catch {
+			throw AppError.encoding(
+				details: ErrorDetails(
+					level: .critical,
+					message: "Error encoding post body parameters to JSON",
+					error:error)
+			)
+		}
+		
+		return urlRequest
+	}
+	
 	private func createUrlEncodedPostRequest(url:URL, data:[String:String]) throws -> URLRequest {
 		var urlRequest:URLRequest = URLRequest(url:url)
 		
 		urlRequest.httpMethod = "POST"
+		urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 		
 		let encoded = createURLEncodedString(from: data)
 		
 		urlRequest.httpBody = encoded.data(using: .utf8)
-		urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		
 		
 		return urlRequest
 	}

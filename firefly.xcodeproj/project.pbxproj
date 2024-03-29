@@ -18,6 +18,9 @@
 		473E7E122BB714B000F8B4C8 /* RemoteCallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E112BB714B000F8B4C8 /* RemoteCallError.swift */; };
 		473E7E142BB7158500F8B4C8 /* FireflyAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E132BB7158500F8B4C8 /* FireflyAPIError.swift */; };
 		473E7E182BB7413E00F8B4C8 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E172BB7413E00F8B4C8 /* AuthManager.swift */; };
+		473E7E1A2BB76F0700F8B4C8 /* GenerateImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */; };
+		473E7E1C2BB7716300F8B4C8 /* GenerateImageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */; };
+		473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1D2BB773AB00F8B4C8 /* AppError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +48,9 @@
 		473E7E112BB714B000F8B4C8 /* RemoteCallError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCallError.swift; sourceTree = "<group>"; };
 		473E7E132BB7158500F8B4C8 /* FireflyAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyAPIError.swift; sourceTree = "<group>"; };
 		473E7E172BB7413E00F8B4C8 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageResponse.swift; sourceTree = "<group>"; };
+		473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageQuery.swift; sourceTree = "<group>"; };
+		473E7E1D2BB773AB00F8B4C8 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				473E7E0E2BB70FE100F8B4C8 /* ContentType.swift */,
+				473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */,
 			);
 			path = type;
 			sourceTree = "<group>";
@@ -128,6 +135,7 @@
 				473E7E072BB69B2200F8B4C8 /* FireflyAppError.swift */,
 				473E7E112BB714B000F8B4C8 /* RemoteCallError.swift */,
 				473E7E132BB7158500F8B4C8 /* FireflyAPIError.swift */,
+				473E7E1D2BB773AB00F8B4C8 /* AppError.swift */,
 			);
 			path = types;
 			sourceTree = "<group>";
@@ -136,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				473E7E0B2BB70B6B00F8B4C8 /* AuthResponse.swift */,
+				473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -210,13 +219,16 @@
 				473E7E0F2BB70FE100F8B4C8 /* ContentType.swift in Sources */,
 				473E7E022BB65C3800F8B4C8 /* Secrets.swift in Sources */,
 				473E7E142BB7158500F8B4C8 /* FireflyAPIError.swift in Sources */,
+				473E7E1C2BB7716300F8B4C8 /* GenerateImageQuery.swift in Sources */,
 				473E7E082BB69B2200F8B4C8 /* FireflyAppError.swift in Sources */,
+				473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */,
 				473E7DFE2BB6515600F8B4C8 /* ApiClient.swift in Sources */,
 				473E7E0A2BB7081E00F8B4C8 /* FireflyApiInterface.swift in Sources */,
 				473E7E0C2BB70B6B00F8B4C8 /* AuthResponse.swift in Sources */,
 				473E7E182BB7413E00F8B4C8 /* AuthManager.swift in Sources */,
 				473E7E052BB65D9500F8B4C8 /* utils.swift in Sources */,
 				473E7E122BB714B000F8B4C8 /* RemoteCallError.swift in Sources */,
+				473E7E1A2BB76F0700F8B4C8 /* GenerateImageResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

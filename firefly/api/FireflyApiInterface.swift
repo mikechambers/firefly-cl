@@ -11,13 +11,17 @@ class FireflyApiInterface {
 	private var apiClient : ApiClient
 	
 	private var fireflyClientId:String
+	private var authToken:String?
 	
-	private var authUrl : URL = URL(string: "https://ims-na1.adobelogin.com/ims/token/v3")!
+	private let authUrl : URL = URL(string: "https://ims-na1.adobelogin.com/ims/token/v3")!
+	private let apiBase : String = "firefly-api.adobe.io"
 
-	init(fireflyClientId:String) {
+	init(fireflyClientId:String, authToken:String? = nil) {
 		
 		self.fireflyClientId = fireflyClientId
-		apiClient = ApiClient()
+		self.authToken = authToken
+		
+		apiClient = ApiClient(fireflyClientId: fireflyClientId, authToken:authToken)
 	}
 
 	func close() {
@@ -37,4 +41,23 @@ class FireflyApiInterface {
 		
 		return response
 	}
+	
+	func generateImage(prompt:String) async throws -> GenerateImageResponse {
+		let url = createUrl(host: apiBase, path: "/v2/images/generate")
+		
+		let query = GenerateImageQuery(prompt: prompt)
+
+		let response : GenerateImageResponse = try await apiClient.postJson(url: url, data: query)
+		
+		return response
+	}
+}
+
+func createUrl(host:String, path:String) -> URL {
+	var components : URLComponents = URLComponents()
+	components.path = path
+	components.host = host
+	components.scheme = "https"
+	
+	return components.url!
 }
