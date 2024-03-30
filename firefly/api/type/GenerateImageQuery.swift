@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import ArgumentParser
 
 struct GenerateImageQuery : Codable {
 	let prompt:String
 	let negativePrompt:String?
 	let contentClass:ContentClass?
-	let n:Int//number of variations
+	let n:Int?//number of variations
 	let size:ImageSize?
 	let seeds:[Int]?
 	let locale:String
@@ -21,7 +22,7 @@ struct GenerateImageQuery : Codable {
 	init(prompt: String,
 		 negativePrompt: String? = nil,
 		 contentClass: ContentClass? = nil,
-		 n: Int = 1,
+		 n: Int? = nil,
 		 size: ImageSize? = nil,
 		 seeds: [Int]? = nil,
 		 locale: String = "en-US",
@@ -46,12 +47,16 @@ struct GenerateImageStyle : Codable {
 	let strength:Int?
 }
 
-enum ContentClass: String, Codable {
+enum ContentClass: String, Codable, ExpressibleByArgument {
 	case photo = "photo"
 	case art = "art"
+	
+	init?(argument:String) {
+		self.init(rawValue: argument)
+	}
 }
 
-enum ImageStylePreset: String, Codable {
+enum ImageStylePreset: String, Codable, ExpressibleByArgument {
 	case photo = "photo"
 	case art = "art"
 	case graphic = "graphic"
@@ -208,7 +213,7 @@ enum ImageStylePreset: String, Codable {
 	case wireframe = "wireframe"
 
 	// Custom initializer to create an enum from a string value
-	init?(presetID: String) {
-		self.init(rawValue: presetID)
+	init?(argument: String) {
+		self.init(rawValue: argument)
 	}
 }

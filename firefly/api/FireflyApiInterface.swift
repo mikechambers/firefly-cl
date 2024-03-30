@@ -42,11 +42,13 @@ class FireflyApiInterface {
 		return response
 	}
 	
-	func generateImage(prompt:String) async throws -> GenerateImageResponse {
+	
+	
+	
+	
+	func generateImage(query:GenerateImageQuery) async throws -> GenerateImageResponse {
 		let url = createUrl(host: apiBase, path: "/v2/images/generate")
-		
-		let query = GenerateImageQuery(prompt: prompt)
-
+	
 		let response : GenerateImageResponse = try await apiClient.postJson(url: url, data: query)
 		
 		return response
