@@ -15,9 +15,10 @@ struct GenerateImageQuery : Codable {
 	let n:Int?//number of variations
 	let size:ImageSize?
 	let seeds:[Int]?
-	let locale:String
+	let locale:String?
 	let visualIntensity : Int?
 	let styles:GenerateImageStyle?
+	let photoSettings:PhotoSettings?
 	
 	init(prompt: String,
 		 negativePrompt: String? = nil,
@@ -25,9 +26,10 @@ struct GenerateImageQuery : Codable {
 		 n: Int? = nil,
 		 size: ImageSize? = nil,
 		 seeds: [Int]? = nil,
-		 locale: String = "en-US",
+		 locale: String? = nil,
 		 visualIntensity: Int? = nil,
-		 styles:GenerateImageStyle? = nil
+		 styles:GenerateImageStyle? = nil,
+		 photoSettings:PhotoSettings? = nil
 	) {
 		
 		self.prompt = prompt
@@ -39,12 +41,19 @@ struct GenerateImageQuery : Codable {
 		self.locale = locale
 		self.visualIntensity = visualIntensity
 		self.styles = styles
+		self.photoSettings = photoSettings
 	}
 }
 
 struct GenerateImageStyle : Codable {
 	let presets:[ImageStylePreset]?
 	let strength:Int?
+}
+
+struct PhotoSettings : Codable {
+	let aperture:Float?
+	let shutterSpeed:Float?
+	let fieldOfView:Int?
 }
 
 enum ContentClass: String, Codable, ExpressibleByArgument {

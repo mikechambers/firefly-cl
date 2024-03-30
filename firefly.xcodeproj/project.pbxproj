@@ -22,6 +22,7 @@
 		473E7E1C2BB7716300F8B4C8 /* GenerateImageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */; };
 		473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1D2BB773AB00F8B4C8 /* AppError.swift */; };
 		473E7E272BB7AE5600F8B4C8 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 473E7E262BB7AE5600F8B4C8 /* ArgumentParser */; };
+		473E7E292BB86FEA00F8B4C8 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E282BB86FEA00F8B4C8 /* Global.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +53,7 @@
 		473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageResponse.swift; sourceTree = "<group>"; };
 		473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageQuery.swift; sourceTree = "<group>"; };
 		473E7E1D2BB773AB00F8B4C8 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		473E7E282BB86FEA00F8B4C8 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				473E7DFC2BB6512A00F8B4C8 /* api */,
 				473E7DFA2BB650AE00F8B4C8 /* Firefly.swift */,
 				473E7E012BB65C3800F8B4C8 /* Secrets.swift */,
+				473E7E282BB86FEA00F8B4C8 /* Global.swift */,
 			);
 			path = firefly;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				473E7E082BB69B2200F8B4C8 /* FireflyAppError.swift in Sources */,
 				473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */,
 				473E7DFE2BB6515600F8B4C8 /* ApiClient.swift in Sources */,
+				473E7E292BB86FEA00F8B4C8 /* Global.swift in Sources */,
 				473E7E0A2BB7081E00F8B4C8 /* FireflyApiInterface.swift in Sources */,
 				473E7E0C2BB70B6B00F8B4C8 /* AuthResponse.swift in Sources */,
 				473E7E182BB7413E00F8B4C8 /* AuthManager.swift in Sources */,

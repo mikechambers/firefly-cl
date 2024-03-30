@@ -160,9 +160,11 @@ struct ApiClient {
 		do {
 			let encoded = try encoder.encode(data)
 			
-			encoder.outputFormatting = .prettyPrinted
-			if let jsonString = String(data: encoded, encoding: .utf8) {
-				print(jsonString)
+			if Global.verbose {
+				encoder.outputFormatting = .prettyPrinted
+				if let jsonString = String(data: encoded, encoding: .utf8) {
+					print(jsonString)
+				}
 			}
 			
 			urlRequest.httpBody = encoded

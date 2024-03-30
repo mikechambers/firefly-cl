@@ -24,6 +24,6 @@ struct GeneratedImageInfo : Codable {
 }
 
 struct ImageSize : Codable {
-	let width : UInt
-	let height: UInt
+	let width : Int
+	let height: Int
 }
