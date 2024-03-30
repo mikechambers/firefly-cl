@@ -21,6 +21,7 @@
 		473E7E1A2BB76F0700F8B4C8 /* GenerateImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */; };
 		473E7E1C2BB7716300F8B4C8 /* GenerateImageQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */; };
 		473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1D2BB773AB00F8B4C8 /* AppError.swift */; };
+		473E7E272BB7AE5600F8B4C8 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 473E7E262BB7AE5600F8B4C8 /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				473E7E272BB7AE5600F8B4C8 /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +175,9 @@
 			dependencies = (
 			);
 			name = firefly;
+			packageProductDependencies = (
+				473E7E262BB7AE5600F8B4C8 /* ArgumentParser */,
+			);
 			productName = firefly;
 			productReference = 473E7DF02BB64F9300F8B4C8 /* firefly */;
 			productType = "com.apple.product-type.tool";
@@ -201,6 +206,9 @@
 				Base,
 			);
 			mainGroup = 473E7DE72BB64F9200F8B4C8;
+			packageReferences = (
+				473E7E1F2BB79F0E00F8B4C8 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = 473E7DF12BB64F9300F8B4C8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -397,6 +405,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		473E7E1F2BB79F0E00F8B4C8 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		473E7E262BB7AE5600F8B4C8 /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 473E7E1F2BB79F0E00F8B4C8 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 473E7DE82BB64F9200F8B4C8 /* Project object */;
 }

@@ -20,3 +20,8 @@ struct Secrets {
 These properties will be used to retrieve and manage your auth tokens for calling the Firefly API.
 
 In general, you should not check this file into your version control system.
+
+
+You can compile from within xcode or via the command line:
+
+```xcodebuild -scheme firefly -configuration Debug -derivedDataPath ./DerivedData```
