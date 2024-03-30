@@ -19,6 +19,10 @@ import ArgumentParser
 @main
 struct Firefly : AsyncParsableCommand {
 	
+	
+	static let fireflyClientIdToken : String = "FIREFLY_CLIENT_ID"
+	static let fireflyClientSecretToken : String = "FIREFLY_CLIENT_SECRET"
+	
 	static var configuration = CommandConfiguration(
 		abstract: "Command line wrapper to access the Adobe Firefly API.",
 		discussion: """
@@ -171,10 +175,15 @@ https://github.com/mikechambers/firefly
 	)
 	var fieldOfView: Int?
 
+	@Option(help:"Firefly Client Id. If not specified, the \(Firefly.fireflyClientIdToken) environment variable will be used if available.")
+	var clientId:String?
+	
+	@Option(help:"Firefly Client Secret. If not specified, the \(Firefly.fireflyClientSecretToken) environment variable will be used if available.")
+	var clientSecret:String?
+	
 	
 	@Flag
 	var verbose = false
-	
 	
 	mutating func run() async throws {
 
@@ -185,7 +194,7 @@ https://github.com/mikechambers/firefly
 		Global.verbose = verbose
 		
 		let authManager = AuthManager()
-		try await authManager.initialize(fireflyClientId: Secrets.fireflyClientId)
+		try await authManager.initialize(fireflyClientId: clientId!, fireflyClientSecret: clientSecret!)
 		
 		if !authManager.isValid {
 			print("Could not retrieve auth tokens")
@@ -193,7 +202,7 @@ https://github.com/mikechambers/firefly
 		}
 	  
 		let apiInterface  = FireflyApiInterface(
-			fireflyClientId: Secrets.fireflyClientId,
+			fireflyClientId: clientId!,
 			authToken: authManager.token)
 		
 		
@@ -254,13 +263,48 @@ https://github.com/mikechambers/firefly
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
-			print(img.seed)
 			//todo: can do these all at once
 			try await downloadImage(from: url, to: directoryUrl, with: n)
 		}
   }
 	
-	func validate() throws {
+	mutating func validate() throws {
+		
+		// Check if one dimension is provided and the other is not
+		if (width == nil) != (height == nil) { // Equivalent to XOR operation
+			throw ValidationError("Both width and height must be provided together.")
+		}
+		
+		// Check if either clientId or clientSecret is set, but not both
+		if (clientId == nil) != (clientSecret == nil) { // XOR check: true if one is nil and the other is not
+			throw ValidationError("Both --clientId and --clientSecret must be provided together if one is provided.")
+		}
+		
+		if clientId == nil && clientSecret == nil {
+			let envClientId = ProcessInfo.processInfo.environment[Firefly.fireflyClientIdToken]
+			let envClientSecret = ProcessInfo.processInfo.environment[Firefly.fireflyClientSecretToken]
+			
+			if let envClientId = envClientId, let envClientSecret = envClientSecret {
+				clientId = envClientId
+				clientSecret = envClientSecret
+			}
+		}
+
+		// If still nil, use compiled-in secrets
+		if clientId == nil && clientSecret == nil {
+			clientId = Secrets.fireflyClientId
+			clientSecret = Secrets.fireflyClientSecret
+		}
+		
+		// Validate that clientId and clientSecret are not nil
+		guard clientId != nil && clientSecret != nil else {
+			throw ValidationError("Firefly Client ID and Firefly Client Secret must be set via command line, environment variable, or compiled into the app.")
+		}
+		
+		// Check if one is provided and the other is not
+		if (clientId == nil && clientSecret != nil) || (clientId != nil && clientSecret == nil) {
+			throw ValidationError("Both --clientId and --clientSecret must be provided together.")
+		}
 		
 		if prompt.count < 1 || prompt.count > 1024 {
 			throw ValidationError("The prompt must be between 1 and 1024 characters in length.")
@@ -271,14 +315,10 @@ https://github.com/mikechambers/firefly
 		}
 		
 		// Validate seeds count against variationCount if it's specified
-		if let variationCount = variationCount {
+		if let variationCount = variationCount, !seeds.isEmpty {
+			// Validate seeds count against variationCount
 			guard seeds.count == variationCount else {
 				throw ValidationError("The number of seeds (\(seeds.count)) must match the variation count (\(variationCount)).")
-			}
-		} else {
-			// If variationCount is not specified, ensure seeds count is between 1 to 4
-			guard seeds.count >= 1 && seeds.count <= 4 else {
-				throw ValidationError("Number of seeds must be between 1 and 4.")
 			}
 		}
 	}

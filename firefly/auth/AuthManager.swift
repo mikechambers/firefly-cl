@@ -17,7 +17,7 @@ class AuthManager {
 	private var _expires:Date?
 	private var _token:String?
 	
-	func initialize(fireflyClientId:String) async throws  {
+	func initialize(fireflyClientId:String, fireflyClientSecret:String) async throws  {
 		let defaults = UserDefaults.standard
 		
 		
@@ -27,11 +27,9 @@ class AuthManager {
 		// Check if the authToken is nil or if expiresDate is nil or if the current date is past the expiresDate
 		if authToken == nil || expiresDate == nil || Date.now > expiresDate! {
 			
-			print("retrieving auth token")
+			let apiInterface = FireflyApiInterface(fireflyClientId: fireflyClientId)
 			
-			let apiInterface = FireflyApiInterface(fireflyClientId: Secrets.fireflyClientId)
-			
-			let response = try await apiInterface.retrieveAuthToken(fireflyClientSecret: Secrets.fireflyClientSecret)
+			let response = try await apiInterface.retrieveAuthToken(fireflyClientSecret: fireflyClientSecret)
 			
 			authToken = response.access_token
 			
