@@ -185,30 +185,45 @@ https://github.com/mikechambers/firefly
 	var writeSettings = false
 	
 	mutating func run() async throws {
-
-		//todo: check for environment variables, or keys passed in
-		
-		try validate()
 		
 		Global.verbose = verbose
 		
+		guard let clientId = clientId, let clientSecret = clientSecret else {
+			throw ValidationError("Client ID and Client Secret must be provided.")
+		}
+		
 		let authManager = AuthManager()
-		try await authManager.initialize(fireflyClientId: clientId!, fireflyClientSecret: clientSecret!)
+		
+		do {
+			try await authManager.initialize(fireflyClientId: clientId, fireflyClientSecret: clientSecret)
+		} catch {
+			Firefly.exit(withError:
+							AppError.auth(
+								details: ErrorDetails(level: .fatal,
+													  message: "Error retrieving authentication tokens.",
+													  error: error)
+							)
+			)
+		}
 		
 		if !authManager.isValid {
-			print("Could not retrieve auth tokens")
-			Firefly.exit(withError: nil)
+			Firefly.exit(withError: AppError.auth(details: ErrorDetails(level: .fatal, message: "Invalid authentication tokens")))
 		}
-	  
-		let apiInterface  = FireflyApiInterface(
-			fireflyClientId: clientId!,
-			authToken: authManager.token)
 		
+		let apiInterface  = FireflyApiInterface(
+			fireflyClientId: clientId,
+			authToken: authManager.token)
 		
 		
 		var refImage:ReferenceImage? = nil
 		if let referenceImage = referenceImage {
-			let id : String? = try await apiInterface.uploadReferenceImage(file: referenceImage)
+			
+			let id:String?
+			do {
+				id = try await apiInterface.uploadReferenceImage(file: referenceImage)
+			} catch {
+				Firefly.exit(withError: AppError.api(details: ErrorDetails(level: .fatal, message: "Error uploading reference image.", error: error)))
+			}
 			
 			if let id = id {
 				refImage = ReferenceImage(id: id)
@@ -222,8 +237,6 @@ https://github.com/mikechambers/firefly
 		if !stylePresets.isEmpty || refImage != nil {
 			style = GenerateImageStyle(presets: stylePresets, strength: styleStrength, referenceImage: refImage)
 		}
-		
-		//todo: check variations and seeds are the same
 		
 		let size = determineImageSize(width: width, height: height)
 		let photoSettings = createPhotoSettings(
@@ -244,12 +257,21 @@ https://github.com/mikechambers/firefly
 			photoSettings: photoSettings
 		)
 		
-		let response : GenerateImageResponse = try await apiInterface.generateImage(query: query)
-		
+		let response:GenerateImageResponse
+		do {
+			response = try await apiInterface.generateImage(query: query)
+		}  catch {
+			Firefly.exit(withError: AppError.api(details: ErrorDetails(level: .fatal, message: "Error generating image.", error: error)))
+		}
 		
 		let directoryUrl = URL(fileURLWithPath: outputDir, isDirectory: true)
-		try FileManager.default.createDirectory(
-			at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+		
+		do {
+			try FileManager.default.createDirectory(
+				at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+		} catch {
+			Firefly.exit(withError: AppError.file(details: ErrorDetails(level: .fatal, message: "Creating directory to save images. Check permissions.", error: error)))
+		}
 		
 		
 		let defaultFilename = "firefly-image.png"
@@ -261,12 +283,24 @@ https://github.com/mikechambers/firefly
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
-			//todo: can do these all at once
-			try await downloadImage(from: url, to: directoryUrl, with: n)
+			
+			do {
+				//todo: can do these all at once
+				try await downloadImage(from: url, to: directoryUrl, with: n)
+			} catch {
+				print("Error downloading image. Skipping. Error: \(error.localizedDescription)")
+				continue
+			}
 			
 			if writeSettings {
 				let o = ImageSettings(query: query, seed: img.seed, fileName: n)
-				try await writeJSON(object: o, to: directoryUrl, with: "\(n).json")
+				
+				do {
+					try await writeJSON(object: o, to: directoryUrl, with: "\(n).json")
+				} catch {
+					print("Error writing image settings. Skipping. Error : \(error.localizedDescription)")
+					continue
+				}
 			}
 			
 		}
