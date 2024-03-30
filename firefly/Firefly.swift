@@ -5,12 +5,9 @@
 //  Created by Mike Chambers on 3/28/24.
 //
 
-//add passing in secret / key and reading from environment (args, env, built in)
-//add settings saving
-//create script that loads settings and write command line to call it again
 //think about file naming
-//look at options, docs, enforcing constraints
 //better error handling and reporting
+//create script that loads settings and write command line to call it again
 
 
 import Foundation
@@ -18,7 +15,6 @@ import ArgumentParser
 
 @main
 struct Firefly : AsyncParsableCommand {
-	
 	
 	static let fireflyClientIdToken : String = "FIREFLY_CLIENT_ID"
 	static let fireflyClientSecretToken : String = "FIREFLY_CLIENT_SECRET"
@@ -185,6 +181,9 @@ https://github.com/mikechambers/firefly
 	@Flag
 	var verbose = false
 	
+	@Flag(help:"If included, will write out a json file for each generated image with info that can be used to regenerate it.")
+	var writeSettings = false
+	
 	mutating func run() async throws {
 
 		//todo: check for environment variables, or keys passed in
@@ -256,7 +255,6 @@ https://github.com/mikechambers/firefly
 		let defaultFilename = "firefly-image.png"
 		let baseFilename = filename ?? defaultFilename
 		
-
 		for (index, img) in response.outputs.enumerated() {
 			let url = URL(string: img.image.presignedUrl)!
 			
@@ -265,6 +263,12 @@ https://github.com/mikechambers/firefly
 			
 			//todo: can do these all at once
 			try await downloadImage(from: url, to: directoryUrl, with: n)
+			
+			if writeSettings {
+				let o = ImageSettings(query: query, seed: img.seed, fileName: n)
+				try await writeJSON(object: o, to: directoryUrl, with: "\(n).json")
+			}
+			
 		}
   }
 	
@@ -348,4 +352,10 @@ func createPhotoSettings(aperture: Float?, shutterSpeed: Float?, fieldOfView: In
 	} else {
 		return nil
 	}
+}
+
+struct ImageSettings : Codable {
+	let query:GenerateImageQuery
+	let seed:Int
+	let fileName:String
 }
