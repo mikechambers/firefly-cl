@@ -23,6 +23,7 @@
 		473E7E1E2BB773AB00F8B4C8 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E1D2BB773AB00F8B4C8 /* AppError.swift */; };
 		473E7E272BB7AE5600F8B4C8 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 473E7E262BB7AE5600F8B4C8 /* ArgumentParser */; };
 		473E7E292BB86FEA00F8B4C8 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E282BB86FEA00F8B4C8 /* Global.swift */; };
+		473E7E2B2BB8874C00F8B4C8 /* UploadReferenceImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E2A2BB8874C00F8B4C8 /* UploadReferenceImageResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,7 @@
 		473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageQuery.swift; sourceTree = "<group>"; };
 		473E7E1D2BB773AB00F8B4C8 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		473E7E282BB86FEA00F8B4C8 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		473E7E2A2BB8874C00F8B4C8 /* UploadReferenceImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadReferenceImageResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 			children = (
 				473E7E0B2BB70B6B00F8B4C8 /* AuthResponse.swift */,
 				473E7E192BB76F0700F8B4C8 /* GenerateImageResponse.swift */,
+				473E7E2A2BB8874C00F8B4C8 /* UploadReferenceImageResponse.swift */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				473E7E052BB65D9500F8B4C8 /* utils.swift in Sources */,
 				473E7E122BB714B000F8B4C8 /* RemoteCallError.swift in Sources */,
 				473E7E1A2BB76F0700F8B4C8 /* GenerateImageResponse.swift in Sources */,
+				473E7E2B2BB8874C00F8B4C8 /* UploadReferenceImageResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

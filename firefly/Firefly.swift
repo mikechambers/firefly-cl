@@ -5,6 +5,15 @@
 //  Created by Mike Chambers on 3/28/24.
 //
 
+//Add reference image upload
+//add passing in secret / key and reading from environment (args, env, built in)
+//add settings saving
+//create script that loads settings and write command line to call it again
+//think about file naming
+//look at options, docs, enforcing constraints
+//better error handling and reporting
+
+
 import Foundation
 import ArgumentParser
 
@@ -21,6 +30,19 @@ struct Firefly : AsyncParsableCommand {
 	
 	@Option(help: "The output directory.", completion: .directory)
 	var outputDir: String
+	
+	@Option(
+		help: "Path to image to use as a style reference.",
+		completion: .file(extensions: ["jpg", "jpeg", "png", "webp"]),
+		transform: { input in
+			let fileURL = URL(fileURLWithPath: input)
+				guard FileManager.default.fileExists(atPath: fileURL.path) else {
+					throw ValidationError("File does not exist at path: \(input)")
+				}
+				return fileURL
+		}
+		)
+	var referenceImage: URL?
 	
 	@Option(help: "Filename.")
 	var filename: String?
@@ -98,10 +120,15 @@ struct Firefly : AsyncParsableCommand {
 			Firefly.exit(withError: nil)
 		}
 	  
-		
 		let apiInterface  = FireflyApiInterface(
 			fireflyClientId: Secrets.fireflyClientId,
 			authToken: authManager.token)
+		
+		
+		if let referenceImage = referenceImage {
+			try await apiInterface.uploadReferenceImage(file: referenceImage)
+		}
+		
 		
 		var style:GenerateImageStyle? = nil
 		

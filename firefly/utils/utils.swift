@@ -18,3 +18,4 @@ func downloadImage(from url: URL, to directory: URL, with fileName: String) asyn
 	let fileURL = directory.appendingPathComponent(fileName)
 	try data.write(to: fileURL)
 }
+

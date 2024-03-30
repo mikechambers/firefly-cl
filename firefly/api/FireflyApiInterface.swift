@@ -42,7 +42,18 @@ class FireflyApiInterface {
 		return response
 	}
 	
+	func uploadReferenceImage(file:URL) async throws {
+		
+		let url = createUrl(host: apiBase, path: "/v2/storage/image")
+
+		let response : UploadReferenceImageResponse = try await apiClient.postImage(url:url, file:file)
+		
+		if !response.images.isEmpty {
+			print(response.images[0].id)
+		}
+		
 	
+	}
 	
 	
 	

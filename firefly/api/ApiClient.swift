@@ -20,8 +20,8 @@ struct ApiClient {
 		config.httpShouldSetCookies = false
 		
 		config.allowsCellularAccess = true
-		config.timeoutIntervalForRequest = 10
-		config.timeoutIntervalForResource = 10
+		config.timeoutIntervalForRequest = 60
+		config.timeoutIntervalForResource = 60
 		config.waitsForConnectivity = true
 		
 		
@@ -59,6 +59,14 @@ struct ApiClient {
 		let urlRequest : URLRequest = try createJsonPostRequest(url: url, data: data)
 		
 		let out:T = try await call(urlRequest: urlRequest)
+		
+		return out
+	}
+	
+	func postImage<T:Codable>(url:URL, file:URL) async throws -> T {
+		let urlRequest : URLRequest = try createImageUploadPostRequest(url:url, file:file)
+		
+		let out : T = try await call(urlRequest: urlRequest)
 		
 		return out
 	}
@@ -136,10 +144,15 @@ struct ApiClient {
 					throw FireflyAPIError.errorStatusReturned(status: s)
 				}
 				
+				var o = "unknown"
+				if let statusCode {
+					o = "\(statusCode)"
+				}
+				
 				throw RemoteCallError.unexpectedStatusResponse(
 					details: ErrorDetails(
 						level: .warning,
-						message: "Received non 200 status code : [\(s)]",
+						message: "Received non 200 status code : [\(o)]",
 						error: nil),
 					body: body, url: urlRequest.url!)
 			}
@@ -147,7 +160,42 @@ struct ApiClient {
 		
 		return body
 	}
-	
+
+	private func mimeType(for fileExtension: String) -> String {
+		switch fileExtension.lowercased() {
+		case "jpg", "jpeg":
+			return "image/jpeg"
+		case "png":
+			return "image/png"
+		case "webp":
+			return "image/webp"
+		default:
+			return "application/octet-stream" // Generic binary data MIME type
+		}
+	}
+
+	private func createImageUploadPostRequest(url: URL, file: URL) throws -> URLRequest {
+		var urlRequest = URLRequest(url: url)
+		urlRequest.httpMethod = "POST"
+		
+		// Extract the file extension from the URL
+		let fileExtension = file.pathExtension
+		
+		// Use the mimeType(for:) function to get the MIME type for the file extension
+		let mimeTypeValue = mimeType(for: fileExtension)
+		
+		// Set the Content-Type header dynamically based on the file's MIME type
+		urlRequest.setValue(mimeTypeValue, forHTTPHeaderField: "Content-Type")
+		
+		// Add image data
+		let imageData = try Data(contentsOf: file)
+		urlRequest.httpBody = imageData
+		
+		return urlRequest
+	}
+
+
+
 	
 	private func createJsonPostRequest(url:URL, data:Codable) throws -> URLRequest {
 		var urlRequest:URLRequest = URLRequest(url:url)
