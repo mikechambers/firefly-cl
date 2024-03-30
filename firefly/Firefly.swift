@@ -125,15 +125,22 @@ struct Firefly : AsyncParsableCommand {
 			authToken: authManager.token)
 		
 		
+		
+		var refImage:ReferenceImage? = nil
 		if let referenceImage = referenceImage {
-			try await apiInterface.uploadReferenceImage(file: referenceImage)
+			let id : String? = try await apiInterface.uploadReferenceImage(file: referenceImage)
+			
+			if let id = id {
+				refImage = ReferenceImage(id: id)
+			}
+			
 		}
 		
 		
 		var style:GenerateImageStyle? = nil
 		
-		if !stylePresets.isEmpty {
-			style = GenerateImageStyle(presets: stylePresets, strength: styleStrength)
+		if !stylePresets.isEmpty || refImage != nil {
+			style = GenerateImageStyle(presets: stylePresets, strength: styleStrength, referenceImage: refImage)
 		}
 		
 		//todo: check variations and seeds are the same

@@ -48,6 +48,11 @@ struct GenerateImageQuery : Codable {
 struct GenerateImageStyle : Codable {
 	let presets:[ImageStylePreset]?
 	let strength:Int?
+	let referenceImage:ReferenceImage?
+}
+
+struct ReferenceImage : Codable {
+	let id:String
 }
 
 struct PhotoSettings : Codable {
