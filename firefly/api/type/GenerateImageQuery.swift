@@ -61,7 +61,7 @@ struct PhotoSettings : Codable {
 	let fieldOfView:Int?
 }
 
-enum ContentClass: String, Codable, ExpressibleByArgument {
+enum ContentClass: String, Codable, ExpressibleByArgument, CaseIterable {
 	case photo = "photo"
 	case art = "art"
 	
@@ -70,7 +70,7 @@ enum ContentClass: String, Codable, ExpressibleByArgument {
 	}
 }
 
-enum ImageStylePreset: String, Codable, ExpressibleByArgument {
+enum ImageStylePreset: String, Codable, ExpressibleByArgument, CaseIterable {
 	case photo = "photo"
 	case art = "art"
 	case graphic = "graphic"

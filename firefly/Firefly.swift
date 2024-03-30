@@ -5,7 +5,6 @@
 //  Created by Mike Chambers on 3/28/24.
 //
 
-//Add reference image upload
 //add passing in secret / key and reading from environment (args, env, built in)
 //add settings saving
 //create script that loads settings and write command line to call it again
@@ -20,15 +19,24 @@ import ArgumentParser
 @main
 struct Firefly : AsyncParsableCommand {
 	
-	static var configuration = CommandConfiguration(abstract: "Command line wrapper to access the Adobe Firefly API")
+	static var configuration = CommandConfiguration(
+		abstract: "Command line wrapper to access the Adobe Firefly API.",
+		discussion: """
+You can view complete API documentation at https://developer.adobe.com/firefly-services/docs/firefly-api/
 
-	@Option(name: .long, help: "The prompt to generate the image")
+Created by Mike Chambers
+https://github.com/mikechambers/firefly
+""",
+		version: Global.version
+	)
+
+	@Option(name: .long, help: "Text prompt for image generation.")
 	var prompt: String
 	
 	@Option(name: .long, help: "The model will avoid these words in the generated content.")
 	var negativePrompt: String?
 	
-	@Option(help: "The output directory.", completion: .directory)
+	@Option(help: "The directory that generated images will be written to.", completion: .directory)
 	var outputDir: String
 	
 	@Option(
@@ -44,40 +52,75 @@ struct Firefly : AsyncParsableCommand {
 		)
 	var referenceImage: URL?
 	
-	@Option(help: "Filename.")
+	@Option(help: """
+		Output file name. If only a single image is used, this will be the name of
+		the generated image. If multiple images are generated, then this will be
+		the base for the names.
+	""")
 	var filename: String?
 	
-	@Option(help: "Content type. [photo, art]")
-	var contentClass:ContentClass?
-	
-	@Option(help:"Number of variations. 1 to 4. Default: 1")
-	var variationCount:Int?
-	
-	//todo: can we validate
-	@Option(help:"Style strength. 1 to 100. Default: 60")
-	var styleStrength:Int?
-	
-	@Option(help:"Adjusts the overall intensity of your photo's existing visual characteristics. 2 to 10. Default: 6")
-	var visualIntensity:Int?
+	@Option(
+		help: "Content type. Available options: \(ContentClass.allCases.map { $0.rawValue }.joined(separator: ", "))"
+	)
+	var contentClass: ContentClass?
 	
 	@Option(
-		parsing:.upToNextOption,
-		help:"Style presets. Complete list at https://developer.adobe.com/firefly-services/docs/firefly-api/guides/concepts/styles/")
-	var stylePresets:[ImageStylePreset] = []
+		help: "Style strength. 1 to 100. Default: 60",
+		transform: {
+			guard let value = Int($0), value >= 1, value <= 100 else {
+				throw ValidationError("Style strength must be between 1 and 100.")
+			}
+			return value
+		}
+	)
+	var styleStrength: Int?
+
 	
 	@Option(
-		parsing:.upToNextOption,
-		help:"""
+		help: "Adjusts the overall intensity of your photo's existing visual characteristics. 2 to 10. Default: 6",
+		transform: {
+			guard let value = Int($0), value >= 2, value <= 10 else {
+				throw ValidationError("Visual intensity must be between 2 and 10.")
+			}
+			return value
+		}
+	)
+	var visualIntensity: Int?
+
+	
+	@Option(
+		parsing: .upToNextOption,
+		help: "Style presets. Available options: \(ImageStylePreset.allCases.map { $0.rawValue }.joined(separator: ", "))."
+	)
+	var stylePresets: [ImageStylePreset] = []
+
+	
+	@Option(help: "Number of variations. 1 to 4. Default: 1",
+			transform: {
+				guard let value = Int($0), value >= 1, value <= 4 else {
+					throw ValidationError("Variation count must be between 1 and 4.")
+				}
+				return value
+			})
+	var variationCount: Int?
+
+	@Option(
+		parsing: .upToNextOption,
+		help: """
 			Seeds. Array of seed(s) that will provide generation stability across \
 			multiple API calls. E.g. You can use the same seed to generate a similar \
 			image with different styles. If "--variationCount" is specified, the \
 			number of elements in the array must be equal to "--variationCount".
 		"""
 	)
-	var seeds:[Int32] = []
+	var seeds: [Int32] = []
 	
-	@Option(help:"Locale")
-	var locale:String?
+	@Option(help: """
+	Locale string in the format of a hyphen-separated combination of ISO 639-1 language code and ISO 3166-1 region code, such as 'en-US'. \
+	When a locale is set, the prompt will be debiased to generate more relevant content for that region. If not specified, the locale will \
+	be auto-detected, based on the user's profile and Accept-Language header.
+	""")
+	var locale: String?
 	
 	@Option(help: """
 		Width of image used in combination with --height. Supported aspect ratios include \
@@ -93,14 +136,41 @@ struct Firefly : AsyncParsableCommand {
 		""")
 	var height: Int?
 	
-	@Option(help:"Aperature")
-	var aperture:Float?
+	@Option(
+		help: "Aperture. Acceptable range: 1.2 to 22.",
+		transform: {
+			guard let value = Float($0), value >= 1.2, value <= 22 else {
+				throw ValidationError("Aperture must be between 1.2 and 22.")
+			}
+			return value
+		}
+	)
+	var aperture: Float?
+
 	
-	@Option(help:"Shutter Speed")
-	var shutterSpeed:Float?
+	@Option(
+		help: "Shutter Speed in seconds. Acceptable range: 0.0005 to 10.",
+		transform: {
+			guard let value = Float($0), value >= 0.0005, value <= 10 else {
+				throw ValidationError("Shutter Speed must be between 0.0005 and 10.")
+			}
+			return value
+		}
+	)
+	var shutterSpeed: Float?
+
 	
-	@Option(help:"Field of View")
-	var fieldOfView:Int?
+	@Option(
+		help: "Field of View (millimeters). Acceptable range: 14 to 300.",
+		transform: {
+			guard let value = Int($0), value >= 14, value <= 300 else {
+				throw ValidationError("Field of View must be between 14 and 300 millimeters.")
+			}
+			return value
+		}
+	)
+	var fieldOfView: Int?
+
 	
 	@Flag
 	var verbose = false
@@ -109,6 +179,8 @@ struct Firefly : AsyncParsableCommand {
 	mutating func run() async throws {
 
 		//todo: check for environment variables, or keys passed in
+		
+		try validate()
 		
 		Global.verbose = verbose
 		
@@ -187,6 +259,29 @@ struct Firefly : AsyncParsableCommand {
 			try await downloadImage(from: url, to: directoryUrl, with: n)
 		}
   }
+	
+	func validate() throws {
+		
+		if prompt.count < 1 || prompt.count > 1024 {
+			throw ValidationError("The prompt must be between 1 and 1024 characters in length.")
+		}
+		
+		if let negativePrompt = negativePrompt, negativePrompt.count < 1 || negativePrompt.count > 1024 {
+			throw ValidationError("The negative prompt must be between 1 and 1024 characters in length.")
+		}
+		
+		// Validate seeds count against variationCount if it's specified
+		if let variationCount = variationCount {
+			guard seeds.count == variationCount else {
+				throw ValidationError("The number of seeds (\(seeds.count)) must match the variation count (\(variationCount)).")
+			}
+		} else {
+			// If variationCount is not specified, ensure seeds count is between 1 to 4
+			guard seeds.count >= 1 && seeds.count <= 4 else {
+				throw ValidationError("Number of seeds must be between 1 and 4.")
+			}
+		}
+	}
 	
 }
 

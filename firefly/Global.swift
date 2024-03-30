@@ -8,5 +8,6 @@
 import Foundation
 
 struct Global {
+	static let version = "0.85.0"
 	static var verbose = false
 }
