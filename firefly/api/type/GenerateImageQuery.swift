@@ -14,7 +14,7 @@ struct GenerateImageQuery : Codable {
 	let contentClass:ContentClass?
 	let n:Int?//number of variations
 	let size:ImageSize?
-	let seeds:[Int]?
+	let seeds:[Int32]?
 	let locale:String?
 	let visualIntensity : Int?
 	let styles:GenerateImageStyle?
@@ -25,7 +25,7 @@ struct GenerateImageQuery : Codable {
 		 contentClass: ContentClass? = nil,
 		 n: Int? = nil,
 		 size: ImageSize? = nil,
-		 seeds: [Int]? = nil,
+		 seeds: [Int32]? = nil,
 		 locale: String? = nil,
 		 visualIntensity: Int? = nil,
 		 styles:GenerateImageStyle? = nil,

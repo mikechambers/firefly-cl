@@ -43,6 +43,17 @@ struct Firefly : AsyncParsableCommand {
 		help:"Style presets. Complete list at https://developer.adobe.com/firefly-services/docs/firefly-api/guides/concepts/styles/")
 	var stylePresets:[ImageStylePreset] = []
 	
+	@Option(
+		parsing:.upToNextOption,
+		help:"""
+			Seeds. Array of seed(s) that will provide generation stability across \
+			multiple API calls. E.g. You can use the same seed to generate a similar \
+			image with different styles. If "--variationCount" is specified, the \
+			number of elements in the array must be equal to "--variationCount".
+		"""
+	)
+	var seeds:[Int32] = []
+	
 	@Option(help:"Locale")
 	var locale:String?
 	
@@ -98,6 +109,8 @@ struct Firefly : AsyncParsableCommand {
 			style = GenerateImageStyle(presets: stylePresets, strength: styleStrength)
 		}
 		
+		//todo: check variations and seeds are the same
+		
 		let size = determineImageSize(width: width, height: height)
 		let photoSettings = createPhotoSettings(
 			aperture: aperture,
@@ -110,6 +123,7 @@ struct Firefly : AsyncParsableCommand {
 			contentClass: contentClass,
 			n:variationCount,
 			size: size,
+			seeds: seeds.isEmpty ? nil : seeds,
 			locale: locale,
 			visualIntensity: visualIntensity,
 			styles: style,
@@ -134,6 +148,7 @@ struct Firefly : AsyncParsableCommand {
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
+			print(img.seed)
 			//todo: can do these all at once
 			try await downloadImage(from: url, to: directoryUrl, with: n)
 		}
