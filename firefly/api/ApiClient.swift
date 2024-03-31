@@ -37,8 +37,8 @@ struct ApiClient {
 		config.httpShouldSetCookies = false
 		
 		config.allowsCellularAccess = true
-		config.timeoutIntervalForRequest = 60
-		config.timeoutIntervalForResource = 60
+		config.timeoutIntervalForRequest = 30
+		config.timeoutIntervalForResource = 30
 		config.waitsForConnectivity = true
 		
 		
