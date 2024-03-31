@@ -277,12 +277,13 @@ struct Firefly : AsyncParsableCommand {
 		}
 		
 		
-		let defaultFilename = "firefly-image.png"
+		let defaultFilename = "firefly-image.jpg"
 		let baseFilename = filename ?? defaultFilename
 		
 		for (index, img) in response.outputs.enumerated() {
 			let url = URL(string: img.image.presignedUrl)!
 			
+			//print(img.image.presignedUrl)
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
