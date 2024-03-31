@@ -46,3 +46,18 @@ func writeJSON<T: Codable>(object: T, to directory: URL, with fileName: String) 
 	try data.write(to: fileURL)
 }
 
+func createJSON<T: Codable>(object:T, pretty:Bool = true) throws -> String? {
+	let encoder = JSONEncoder()
+	
+	if pretty {
+		encoder.outputFormatting = .prettyPrinted
+	}
+	
+	let encoded = try encoder.encode(object)
+	
+	if let jsonString = String(data: encoded, encoding: .utf8) {
+		return jsonString
+	}
+	
+	return nil
+}

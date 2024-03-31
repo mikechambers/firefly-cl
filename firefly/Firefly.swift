@@ -203,14 +203,18 @@ struct Firefly : AsyncParsableCommand {
 		
 		Global.verbose = verbose
 		
+		//these should be set in validate() which is called at start up by
+		//ArgumentParser
 		guard let clientId = clientId, let clientSecret = clientSecret else {
 			throw ValidationError("Client ID and Client Secret must be provided.")
 		}
 		
+		//Expand tildes so paths resolve correctly
 		outputDir = (outputDir as NSString).expandingTildeInPath
 		
 		let authManager = AuthManager()
 		
+		//Get auth token (either stored, and retrieve a new one)
 		do {
 			try await authManager.initialize(fireflyClientId: clientId, fireflyClientSecret: clientSecret)
 		} catch {
@@ -224,7 +228,12 @@ struct Firefly : AsyncParsableCommand {
 		}
 		
 		if !authManager.isValid {
-			Firefly.exit(withError: AppError.auth(details: ErrorDetails(level: .fatal, message: "Invalid authentication tokens")))
+			
+			//if token is not valid, we can't do anything. In general, should not get here
+			//as an error would probably have been thrown above
+			Firefly.exit(withError: AppError.auth(
+				details: ErrorDetails(level: .fatal,
+				message: "Invalid authentication tokens")))
 		}
 		
 		let apiInterface  = FireflyApiInterface(
@@ -233,8 +242,11 @@ struct Firefly : AsyncParsableCommand {
 		
 		
 		var refImage:ReferenceImage? = nil
+		
+		//if a style reference image is specified, lets upload and get an ID
+		//for it
 		if let referenceImage = referenceImage {
-			
+		
 			let id:String?
 			do {
 				id = try await apiInterface.uploadReferenceImage(file: referenceImage)
@@ -255,18 +267,24 @@ struct Firefly : AsyncParsableCommand {
 		
 		var style:GenerateImageStyle? = nil
 		
+		
+		// style presets
 		if !stylePresets.isEmpty || refImage != nil {
 			style = GenerateImageStyle(
 				presets: stylePresets,
 				strength: styleStrength, referenceImage: refImage)
 		}
 		
+		//image dimensions
 		let size = determineImageSize(width: width, height: height)
+		
+		//photo settings
 		let photoSettings = createPhotoSettings(
 			aperture: aperture,
 			shutterSpeed: shutterSpeed,
 			fieldOfView: fieldOfView)
 		
+		//overall query
 		let query = GenerateImageQuery(
 			prompt:prompt,
 			negativePrompt: negativePrompt,
@@ -280,6 +298,19 @@ struct Firefly : AsyncParsableCommand {
 			photoSettings: photoSettings
 		)
 		
+		if Global.verbose {
+			do {
+				let json = try createJSON(object: query)
+				
+				if let json = json {
+					print("QUERY : \(json)")
+				}
+			} catch {
+				print("Error creating json from query. Skipping. [\(error.localizedDescription)]")
+			}
+		}
+		
+		//generate the image
 		let response:GenerateImageResponse
 		do {
 			response = try await apiInterface.generateImage(query: query)
@@ -290,9 +321,12 @@ struct Firefly : AsyncParsableCommand {
 				error: error)))
 		}
 		
+		//output directory
 		let directoryUrl = URL(fileURLWithPath: outputDir, isDirectory: true)
 		
 		do {
+			
+			//create if it doesnt exists
 			try FileManager.default.createDirectory(
 				at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
 		} catch {
@@ -305,11 +339,17 @@ struct Firefly : AsyncParsableCommand {
 		}
 		
 		
+		// Here is how naming works. If only one image is generated, then
+		// defaultFilename will be used, unless a name is specified via
+		// --filename
+		// If multiple images are used, the the name will be based on
+		// default / --filename, with numbers appended
+		//
+		// Probably should rethink this in general
 		let defaultFilename = "firefly-image.jpg"
 		let baseFilename = filename ?? defaultFilename
 		
 		for (index, img) in response.outputs.enumerated() {
-			
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
@@ -332,6 +372,8 @@ struct Firefly : AsyncParsableCommand {
 			}
 			
 			
+			//if --write-settings is specified, we write out JSON file with the
+			//info required to recreate the image
 			if writeSettings {
 				let o = ImageSettings(query: query, seed: img.seed, fileName: n)
 				
@@ -346,6 +388,7 @@ struct Firefly : AsyncParsableCommand {
 		}
   }
 	
+	//validates input, automatically called at start up by ArgumentParser
 	mutating func validate() throws {
 		
 		// Check if one dimension is provided and the other is not
