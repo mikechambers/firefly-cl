@@ -360,7 +360,8 @@ struct Firefly : AsyncParsableCommand {
 			if let url = URL(string: img.image.presignedUrl) {
 				
 				if Global.verbose {
-					print(img.image.presignedUrl)
+					print("image url : \(img.image.presignedUrl)")
+					print("image seed : \(img.seed)")
 				}
 				
 				do {
