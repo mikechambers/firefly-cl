@@ -6,7 +6,6 @@
 //
 
 //think about file naming
-//better error handling and reporting
 //create script that loads settings and write command line to call it again
 
 
@@ -22,13 +21,15 @@ struct Firefly : AsyncParsableCommand {
 	static var configuration = CommandConfiguration(
 		abstract: "Command line wrapper to access the Adobe Firefly API.",
 		discussion: """
-You can view complete API documentation at https://developer.adobe.com/firefly-services/docs/firefly-api/
+		You can view complete API documentation at:
+		https://developer.adobe.com/firefly-services/docs/firefly-api/
 
-Created by Mike Chambers
-https://github.com/mikechambers/firefly
-""",
+		Created by Mike Chambers
+		https://github.com/mikechambers/firefly
+		""",
 		version: Global.version
 	)
+
 
 	@Option(name: .long, help: "Text prompt for image generation.")
 	var prompt: String
