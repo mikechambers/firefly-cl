@@ -49,7 +49,7 @@ struct Firefly : AsyncParsableCommand {
 				}
 				return fileURL
 		}
-		)
+	)
 	var referenceImage: URL?
 	
 	@Option(help: """
