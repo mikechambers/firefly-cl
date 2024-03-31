@@ -24,6 +24,9 @@
 
 import Foundation
 
+//Represents Errors returned from calling text to image API
+//Mapped to errors at:
+//https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/
 enum FireflyAPIStatusResponseCode : Int, CaseIterable {
 	case unknown = -1
 	case badRequest = 400

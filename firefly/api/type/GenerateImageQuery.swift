@@ -25,6 +25,10 @@
 import Foundation
 import ArgumentParser
 
+
+//Represents an image query. Specifically structured to create JSON
+//in the format required by the Firefly text to image API
+//https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/
 struct GenerateImageQuery : Codable {
 	let prompt:String
 	let negativePrompt:String?
@@ -87,6 +91,8 @@ enum ContentClass: String, Codable, ExpressibleByArgument, CaseIterable {
 	}
 }
 
+//Supported image model styles
+//https://developer.adobe.com/firefly-services/docs/firefly-api/guides/concepts/styles/
 enum ImageStylePreset: String, Codable, ExpressibleByArgument, CaseIterable {
 	case photo = "photo"
 	case art = "art"

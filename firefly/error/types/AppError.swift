@@ -24,11 +24,22 @@
 
 import Foundation
 
+//General app errors
 enum AppError : FireflyAppError {
+	
+	//error encoding / decoding data. Usually JSON
 	case encoding(details:ErrorDetails)
+	
+	//error with authentication
 	case auth(details:ErrorDetails)
+	
+	//error working with file system
 	case file(details:ErrorDetails)
+	
+	//error working with app
 	case api(details:ErrorDetails)
+	
+	//general app error
 	case app(details:ErrorDetails)
 
 	

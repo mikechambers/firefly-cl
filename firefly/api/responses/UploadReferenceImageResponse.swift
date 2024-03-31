@@ -25,6 +25,8 @@
 import Foundation
 
 
+//Response from calling API to upload a reference image
+//https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/upload_image/
 struct UploadReferenceImageResponse : Codable {
 	let images : [UploadInfo]
 }

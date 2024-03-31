@@ -14,7 +14,6 @@
 		473E7E082BB69B2200F8B4C8 /* FireflyAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E072BB69B2200F8B4C8 /* FireflyAppError.swift */; };
 		473E7E0A2BB7081E00F8B4C8 /* FireflyApiInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E092BB7081E00F8B4C8 /* FireflyApiInterface.swift */; };
 		473E7E0C2BB70B6B00F8B4C8 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E0B2BB70B6B00F8B4C8 /* AuthResponse.swift */; };
-		473E7E0F2BB70FE100F8B4C8 /* ContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E0E2BB70FE100F8B4C8 /* ContentType.swift */; };
 		473E7E122BB714B000F8B4C8 /* RemoteCallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E112BB714B000F8B4C8 /* RemoteCallError.swift */; };
 		473E7E142BB7158500F8B4C8 /* FireflyAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E132BB7158500F8B4C8 /* FireflyAPIError.swift */; };
 		473E7E182BB7413E00F8B4C8 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473E7E172BB7413E00F8B4C8 /* AuthManager.swift */; };
@@ -47,7 +46,6 @@
 		473E7E072BB69B2200F8B4C8 /* FireflyAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyAppError.swift; sourceTree = "<group>"; };
 		473E7E092BB7081E00F8B4C8 /* FireflyApiInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyApiInterface.swift; sourceTree = "<group>"; };
 		473E7E0B2BB70B6B00F8B4C8 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
-		473E7E0E2BB70FE100F8B4C8 /* ContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentType.swift; sourceTree = "<group>"; };
 		473E7E112BB714B000F8B4C8 /* RemoteCallError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCallError.swift; sourceTree = "<group>"; };
 		473E7E132BB7158500F8B4C8 /* FireflyAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyAPIError.swift; sourceTree = "<group>"; };
 		473E7E172BB7413E00F8B4C8 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -130,7 +128,6 @@
 		473E7E0D2BB70F7900F8B4C8 /* type */ = {
 			isa = PBXGroup;
 			children = (
-				473E7E0E2BB70FE100F8B4C8 /* ContentType.swift */,
 				473E7E1B2BB7716300F8B4C8 /* GenerateImageQuery.swift */,
 			);
 			path = type;
@@ -230,7 +227,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				473E7DFB2BB650AE00F8B4C8 /* Firefly.swift in Sources */,
-				473E7E0F2BB70FE100F8B4C8 /* ContentType.swift in Sources */,
 				473E7E022BB65C3800F8B4C8 /* Secrets.swift in Sources */,
 				473E7E142BB7158500F8B4C8 /* FireflyAPIError.swift in Sources */,
 				473E7E1C2BB7716300F8B4C8 /* GenerateImageQuery.swift in Sources */,

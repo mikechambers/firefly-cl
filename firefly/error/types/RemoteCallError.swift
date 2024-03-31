@@ -24,11 +24,23 @@
 
 import Foundation
 
+
+//Errors making remote network calls
 enum RemoteCallError : FireflyAppError {
+	
+	//Request timed out
 	case timedOut(details:ErrorDetails, url:URL?)
+	
+	//error parsing JSON response
 	case jsonParseFailed(details:ErrorDetails, body:String, url:URL)
+	
+	//unexpected status response
 	case unexpectedStatusResponse(details:ErrorDetails, body:String, url:URL)
+	
+	//error loading data
 	case dataLoad(details:ErrorDetails, url:URL)
+	
+	//error calling url
 	case urlError(details:ErrorDetails, url:URL?)
 
 	init(urlError:URLError, level:ErrorLevel, message:String, url:URL? = nil) {

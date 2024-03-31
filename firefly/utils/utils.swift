@@ -24,17 +24,22 @@
 
 import Foundation
 
+//Get value of specified environment variable or nil if it doesnt exist
 func getEnvironmentVar(_ name: String) -> String? {
 	guard let rawValue = getenv(name) else { return nil }
 	return String(utf8String: rawValue)
 }
 
+//download a file from specified URL and save to the specified directory / file name
 func downloadImage(from url: URL, to directory: URL, with fileName: String) async throws {
 	let (data, _) = try await URLSession.shared.data(from: url)
 	
 	let fileURL = directory.appendingPathComponent(fileName)
 	try data.write(to: fileURL)
 }
+
+
+//Write specifed object to a pretty printed JSON file at the specified dir / filename
 func writeJSON<T: Codable>(object: T, to directory: URL, with fileName: String) async throws {
 	let encoder = JSONEncoder()
 
@@ -46,6 +51,7 @@ func writeJSON<T: Codable>(object: T, to directory: URL, with fileName: String) 
 	try data.write(to: fileURL)
 }
 
+//Create a pretty printed JSON string from the specified object
 func createJSON<T: Codable>(object:T, pretty:Bool = true) throws -> String? {
 	let encoder = JSONEncoder()
 	

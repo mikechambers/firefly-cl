@@ -24,6 +24,7 @@
 
 import Foundation
 
+//Base error for app
 enum ErrorLevel {
 	//Some odd state we will log
 	case information

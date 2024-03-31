@@ -22,6 +22,9 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+
+//Response from calling API to generate an image
+//https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/
 struct GenerateImageResponse : Codable{
 	let version:String
 	

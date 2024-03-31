@@ -24,6 +24,9 @@
 
 import Foundation
 
+
+//Response from calling API to generate auth token
+///https://developer.adobe.com/firefly-services/docs/firefly-api/guides/concepts/authentication/
 struct AuthResponse : Codable {
 	var access_token:String
 	var expires_in:UInt32
