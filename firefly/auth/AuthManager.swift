@@ -25,6 +25,7 @@
 import Foundation
 
 
+//Used to manage, update and store Firefly API auth tokens
 class AuthManager {
 	
 	private let authTokenKey = "AUTH_TOKEN"
@@ -34,6 +35,7 @@ class AuthManager {
 	private var _expires:Date?
 	private var _token:String?
 	
+	//initialize tokens, either from storage, or from API
 	func initialize(fireflyClientId:String, fireflyClientSecret:String) async throws  {
 		let defaults = UserDefaults.standard
 		
@@ -41,18 +43,33 @@ class AuthManager {
 		var authToken = defaults.string(forKey: authTokenKey)
 		var expiresDate = defaults.object(forKey: authExpiresKey) as? Date
 
+		//check if we have a valid token, and it has not expired
 		if let expiresDate = expiresDate, Date.now <= expiresDate, let authToken = authToken {
 			// Token is valid and not expired
 			_token = authToken
 			_expires = expiresDate
 		} else {
+			
+			//Need to get a new auth token
+			
 			let apiInterface = FireflyApiInterface(fireflyClientId: fireflyClientId)
 			
-			let response = try await apiInterface.retrieveAuthToken(fireflyClientSecret: fireflyClientSecret)
+			let response:AuthResponse
+			do {
+				response = try await apiInterface.retrieveAuthToken(fireflyClientSecret: fireflyClientSecret)
+			} catch {
+				
+				//if we get here, we know tokens are not valid, so lets clear
+				//them to be safe
+				clear()
+				throw error
+			}
 			
 			authToken = response.access_token
 			
 			// Calculate the new expiration date based on the current time and the expiresIn value
+			// Tokens are currently 24 hours and we expire aat 23 just so we don't get in a state where they expire
+			// in the middle of calls
 			expiresDate = Date.now.addingTimeInterval(TimeInterval(response.expires_in) + authBufferSeconds)
 			
 			// Save the new authToken and its expiration date to UserDefaults
@@ -63,6 +80,13 @@ class AuthManager {
 		
 		_token = authToken
 		_expires = expiresDate
+	}
+	
+	//clear saved token / data
+	func clear() {
+		let defaults = UserDefaults.standard
+		defaults.removeObject(forKey: authTokenKey)
+		defaults.removeObject(forKey: authExpiresKey)
 	}
 	
 	// Getter for expires property
