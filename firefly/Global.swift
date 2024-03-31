@@ -31,4 +31,6 @@ struct Global {
 	
 	//Where to print verbose output
 	static var verbose = false
+	
+	static let projectSite : String = "https://github.com/mikechambers/firefly-cl"
 }

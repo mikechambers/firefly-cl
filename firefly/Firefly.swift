@@ -39,7 +39,7 @@ struct Firefly : AsyncParsableCommand {
 		https://developer.adobe.com/firefly-services/docs/firefly-api/
 
 		Created by Mike Chambers
-		https://github.com/mikechambers/firefly
+		\(Global.projectSite)
 		""",
 		version: Global.version
 	)
