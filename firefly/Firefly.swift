@@ -240,6 +240,10 @@ struct Firefly : AsyncParsableCommand {
 			fireflyClientId: clientId,
 			authToken: authManager.token)
 		
+		defer {
+			apiInterface.close()
+		}
+		
 		
 		var refImage:ReferenceImage? = nil
 		
