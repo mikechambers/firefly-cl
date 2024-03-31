@@ -20,7 +20,7 @@ func downloadImage(from url: URL, to directory: URL, with fileName: String) asyn
 }
 func writeJSON<T: Codable>(object: T, to directory: URL, with fileName: String) async throws {
 	let encoder = JSONEncoder()
-	// Customize the JSON encoding here if needed (e.g., .prettyPrinted)
+
 	encoder.outputFormatting = .prettyPrinted
 	
 	let data = try encoder.encode(object)

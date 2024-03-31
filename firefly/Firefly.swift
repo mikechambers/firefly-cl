@@ -5,8 +5,6 @@
 //  Created by Mike Chambers on 3/28/24.
 //
 
-//think about file naming
-//create script that loads settings and write command line to call it again
 
 
 import Foundation
@@ -15,6 +13,7 @@ import ArgumentParser
 @main
 struct Firefly : AsyncParsableCommand {
 	
+	//IDs for environment variables for API keys
 	static let fireflyClientIdToken : String = "FIREFLY_CLIENT_ID"
 	static let fireflyClientSecretToken : String = "FIREFLY_CLIENT_SECRET"
 	
@@ -225,7 +224,11 @@ struct Firefly : AsyncParsableCommand {
 			do {
 				id = try await apiInterface.uploadReferenceImage(file: referenceImage)
 			} catch {
-				Firefly.exit(withError: AppError.api(details: ErrorDetails(level: .fatal, message: "Error uploading reference image.", error: error)))
+				Firefly.exit(withError: AppError.api(
+					details: ErrorDetails(level: .fatal,
+					message: "Error uploading reference image.",
+					error: error)
+				))
 			}
 			
 			if let id = id {
@@ -238,7 +241,9 @@ struct Firefly : AsyncParsableCommand {
 		var style:GenerateImageStyle? = nil
 		
 		if !stylePresets.isEmpty || refImage != nil {
-			style = GenerateImageStyle(presets: stylePresets, strength: styleStrength, referenceImage: refImage)
+			style = GenerateImageStyle(
+				presets: stylePresets,
+				strength: styleStrength, referenceImage: refImage)
 		}
 		
 		let size = determineImageSize(width: width, height: height)
@@ -264,7 +269,10 @@ struct Firefly : AsyncParsableCommand {
 		do {
 			response = try await apiInterface.generateImage(query: query)
 		}  catch {
-			Firefly.exit(withError: AppError.api(details: ErrorDetails(level: .fatal, message: "Error generating image.", error: error)))
+			Firefly.exit(withError: AppError.api(
+				details: ErrorDetails(level: .fatal,
+				message: "Error generating image.",
+				error: error)))
 		}
 		
 		let directoryUrl = URL(fileURLWithPath: outputDir, isDirectory: true)
@@ -273,7 +281,12 @@ struct Firefly : AsyncParsableCommand {
 			try FileManager.default.createDirectory(
 				at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
 		} catch {
-			Firefly.exit(withError: AppError.file(details: ErrorDetails(level: .fatal, message: "Creating directory to save images. Check permissions.", error: error)))
+			Firefly.exit(withError: AppError.file(
+				details: ErrorDetails(
+					level: .fatal,
+					message: "Creating directory to save images. Check permissions.",
+					error: error)
+			))
 		}
 		
 		
@@ -281,20 +294,28 @@ struct Firefly : AsyncParsableCommand {
 		let baseFilename = filename ?? defaultFilename
 		
 		for (index, img) in response.outputs.enumerated() {
-			let url = URL(string: img.image.presignedUrl)!
 			
-			//print(img.image.presignedUrl)
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
-			
-			do {
-				//todo: can do these all at once
-				try await downloadImage(from: url, to: directoryUrl, with: n)
-			} catch {
-				print("Error downloading image. Skipping. Error: \(error.localizedDescription)")
+			if let url = URL(string: img.image.presignedUrl) {
+				
+				if Global.verbose {
+					print(img.image.presignedUrl)
+				}
+				
+				do {
+					//todo: can do these all at once
+					try await downloadImage(from: url, to: directoryUrl, with: n)
+				} catch {
+					print("Error downloading image. Skipping. Error: \(error.localizedDescription)")
+					continue
+				}
+			} else {
+				print("Error creating image URL. Skipping. [\(img.image.presignedUrl)]")
 				continue
 			}
+			
 			
 			if writeSettings {
 				let o = ImageSettings(query: query, seed: img.seed, fileName: n)

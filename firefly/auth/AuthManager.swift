@@ -24,9 +24,11 @@ class AuthManager {
 		var authToken = defaults.string(forKey: authTokenKey)
 		var expiresDate = defaults.object(forKey: authExpiresKey) as? Date
 
-		// Check if the authToken is nil or if expiresDate is nil or if the current date is past the expiresDate
-		if authToken == nil || expiresDate == nil || Date.now > expiresDate! {
-			
+		if let expiresDate = expiresDate, Date.now <= expiresDate, let authToken = authToken {
+			// Token is valid and not expired
+			_token = authToken
+			_expires = expiresDate
+		} else {
 			let apiInterface = FireflyApiInterface(fireflyClientId: fireflyClientId)
 			
 			let response = try await apiInterface.retrieveAuthToken(fireflyClientSecret: fireflyClientSecret)
@@ -39,9 +41,8 @@ class AuthManager {
 			// Save the new authToken and its expiration date to UserDefaults
 			defaults.set(authToken, forKey: authTokenKey)
 			defaults.set(expiresDate, forKey: authExpiresKey)
-			
-			//throw error if we can set
 		}
+
 		
 		_token = authToken
 		_expires = expiresDate
@@ -66,5 +67,4 @@ class AuthManager {
 			return false
 		}
 	}
-	
 }
