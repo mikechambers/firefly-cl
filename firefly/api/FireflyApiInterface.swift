@@ -24,15 +24,22 @@
 
 import Foundation
 
+//Class that provides an interface to the Firefly services API
+//https://developer.adobe.com/firefly-services/docs/firefly-api/
 class FireflyApiInterface {
 	private var apiClient : ApiClient
 	
 	private var fireflyClientId:String
 	private var authToken:String?
 	
+	//URL to retrieve AUTH tokens
 	private let authUrl : URL = URL(string: "https://ims-na1.adobelogin.com/ims/token/v3")!
+	
+	// API URL base
 	private let apiBase : String = "firefly-api.adobe.io"
 
+	//auth token is optional, since you may need to use the API to retrieve the
+	//auth token
 	init(fireflyClientId:String, authToken:String? = nil) {
 		
 		self.fireflyClientId = fireflyClientId
@@ -45,6 +52,8 @@ class FireflyApiInterface {
 		apiClient.close()
 	}
 	
+	
+	//Call API to retrieve an AUTH token based on specified API id / secret
 	func retrieveAuthToken(fireflyClientSecret:String) async throws -> AuthResponse {
 		
 		let data = [
@@ -59,21 +68,26 @@ class FireflyApiInterface {
 		return response
 	}
 	
+	//Upload a reference image, and return information, including an ID pointing
+	//to that image which can be used in subsequent API call
 	func uploadReferenceImage(file:URL) async throws -> String? {
 		
 		let url = createUrl(host: apiBase, path: "/v2/storage/image")
 
 		let response : UploadReferenceImageResponse = try await apiClient.postImage(url:url, file:file)
 		
+		
+		//not sure why we would get here, but lets check
 		if response.images.isEmpty {
 			return nil
 		}
 		
+		//currently, this code only supports uploading 1 image at a time. Not
+		//clear to the API supports uploading more than one (im trying to find out)
 		return response.images[0].id
 	}
 	
-	
-	
+	//Call API to generate an image (basically text to image)
 	func generateImage(query:GenerateImageQuery) async throws -> GenerateImageResponse {
 		let url = createUrl(host: apiBase, path: "/v2/images/generate")
 	
@@ -83,6 +97,7 @@ class FireflyApiInterface {
 	}
 }
 
+//create an https based URL with the included host and path
 func createUrl(host:String, path:String) -> URL {
 	var components : URLComponents = URLComponents()
 	components.path = path
