@@ -24,9 +24,12 @@
 
 import Foundation
 
+//Semi-Generic wrapper for making HTTP calls
 struct ApiClient {
 	
 	private var urlSession : URLSession
+	
+	//todo: could move this out of here and have it passed in
 	let userAgent : String = "Firefly Command Line App"
 	
 	init(fireflyClientId:String? = nil, authToken:String? = nil) {
@@ -64,6 +67,7 @@ struct ApiClient {
 	}
 	
 	
+	//post url encoded name / value pairs
 	func postUrlEncoded<T:Codable>(url:URL, data:[String:String]) async throws -> T {
 		let urlRequest : URLRequest = try createUrlEncodedPostRequest(url:url, data: data)
 		
@@ -72,6 +76,7 @@ struct ApiClient {
 		return out
 	}
 	
+	//POST json data
 	func postJson<T:Codable>(url:URL, data:Codable) async throws -> T {
 		let urlRequest : URLRequest = try createJsonPostRequest(url: url, data: data)
 		
@@ -80,6 +85,7 @@ struct ApiClient {
 		return out
 	}
 	
+	//Post an image, with content type determined by file name extension
 	func postImage<T:Codable>(url:URL, file:URL) async throws -> T {
 		let urlRequest : URLRequest = try createImageUploadPostRequest(url:url, file:file)
 		
@@ -99,7 +105,7 @@ struct ApiClient {
 	}
 	 */
 	
-	func call<T:Codable>(urlRequest:URLRequest) async throws -> T {
+	private func call<T:Codable>(urlRequest:URLRequest) async throws -> T {
 		let body = try await retrieveString(urlRequest: urlRequest)
 		
 		let decoder:JSONDecoder = JSONDecoder()
@@ -124,6 +130,7 @@ struct ApiClient {
 	}
 	
 	
+	//returns body from response as a string
 	func retrieveString(urlRequest:URLRequest) async throws -> String {
 		
 		var data:Data
@@ -178,6 +185,7 @@ struct ApiClient {
 		return body
 	}
 
+	//determine image mimeType based on fie extension
 	private func mimeType(for fileExtension: String) -> String {
 		switch fileExtension.lowercased() {
 		case "jpg", "jpeg":
@@ -191,12 +199,16 @@ struct ApiClient {
 		}
 	}
 
+	//create a URLRequest to upload specified file / image
 	private func createImageUploadPostRequest(url: URL, file: URL) throws -> URLRequest {
 		var urlRequest = URLRequest(url: url)
 		urlRequest.httpMethod = "POST"
 		
 		// Extract the file extension from the URL
 		let fileExtension = file.pathExtension
+		
+		//If no extension, it returns an empty string, and the call below will
+		//probably fail
 		
 		// Use the mimeType(for:) function to get the MIME type for the file extension
 		let mimeTypeValue = mimeType(for: fileExtension)
@@ -212,8 +224,7 @@ struct ApiClient {
 	}
 
 
-
-	
+	//Create a URLRequest that posts JSON representation of the passed in object
 	private func createJsonPostRequest(url:URL, data:Codable) throws -> URLRequest {
 		var urlRequest:URLRequest = URLRequest(url:url)
 		
@@ -245,6 +256,8 @@ struct ApiClient {
 		return urlRequest
 	}
 	
+	//Create a URL encoded post requests passing specified name / value pairs passed
+	//in via the specified object
 	private func createUrlEncodedPostRequest(url:URL, data:[String:String]) throws -> URLRequest {
 		var urlRequest:URLRequest = URLRequest(url:url)
 		
@@ -259,7 +272,7 @@ struct ApiClient {
 		return urlRequest
 	}
 	
-	func createURLEncodedString(from data: [String: String]) -> String {
+	private func createURLEncodedString(from data: [String: String]) -> String {
 		let pairs = data.map { key, value in
 			// Encode both the key and the value to escape characters that are not allowed in a URL
 			let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
