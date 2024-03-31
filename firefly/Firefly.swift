@@ -193,6 +193,8 @@ struct Firefly : AsyncParsableCommand {
 			throw ValidationError("Client ID and Client Secret must be provided.")
 		}
 		
+		outputDir = (outputDir as NSString).expandingTildeInPath
+		
 		let authManager = AuthManager()
 		
 		do {
