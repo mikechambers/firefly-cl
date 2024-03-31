@@ -78,6 +78,10 @@ You can compile from within xcode or via the command line:
 xcodebuild -scheme firefly -configuration Debug -derivedDataPath ./DerivedData
 ```
 
+### Dependencies
+
+The project uses [Swift Argument Parser](https://github.com/apple/swift-argument-parser), which should be configured within the XCode project.
+
 ## Todo / Known Issues
 
 -   Remove dependencies on XCode, and enable compilation / running across platforms / operating systems
