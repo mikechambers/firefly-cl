@@ -41,7 +41,7 @@ Complete usage information can be found via:
 firefly --help
 ```
 
-There are only two requires arguments:
+There are only two required arguments:
 
 ```
 firefly --prompt "Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed" --output-dir images/
@@ -51,7 +51,7 @@ This will generate an image using the specified prompt with default settings, an
 
 If the output directory does not exist, it will be created. You can specify the name of the generated image using the `--filename` flag. Note that if you generate more that one image at a time, then file names will be automated. Please see the `--help` command for more specifics.
 
-In general, you can refernce the [API developer docs](https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/) to view more detailed information on avaliable arguments and parameters.
+In general, you can reference the [API developer docs](https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/) to view more detailed information on available arguments and parameters.
 
 You can find a list of supported `--style-presets` values, and examples in the [Image Model Style docs](https://developer.adobe.com/firefly-services/docs/firefly-api/guides/concepts/styles/). They can be passed in via their preset id.
 
