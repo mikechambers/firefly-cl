@@ -2,6 +2,8 @@
 
 Collection of shell scripts using the firefly command line app.
 
+[https://github.com/mikechambers/firefly-cl](https://github.com/mikechambers/firefly-cl)
+
 ## Scripts
 
 ### recursive
