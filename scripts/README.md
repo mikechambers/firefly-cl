@@ -14,7 +14,7 @@ Requires that [ffmpeg](https://ffmpeg.org/) is install and in path.
 
 Bash script that generates one image for each possible style based on the specified prompt. Will create an image for each style, and combine all of them into a pdf.
 
-Requires that [ImageMagick](https://imagemagick.org/index.php) be installed and in path.
+Requires that [ImageMagick](https://imagemagick.org/index.php) is installed and in path.
 
 ## License
 
