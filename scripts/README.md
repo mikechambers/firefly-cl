@@ -24,6 +24,10 @@ Bash script that takes a prompt and randomly combines styles (based on your sett
 
 Requires that [ImageMagick](https://imagemagick.org/index.php) is installed and in path.
 
+### astyles
+
+Bash script that takes a prompt and then generates an image using all possible styles.
+
 ## License
 
 Project released under a [MIT License](LICENSE.md).

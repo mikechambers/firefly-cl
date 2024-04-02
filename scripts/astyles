@@ -23,25 +23,21 @@
 # Takes a specified prompt, randomly combines styles to create images which are
 # then combined in a PDF
 
+# takes a prompt and generates it will all possible styles. Note running multiple
+# times will generate different results do to the seed. Change the firefly command below
+# to add --verbose to print out seed value, which you can then pass back in to reproduce
 
 #!/bin/bash
 
-# Number of images to create
-numImages=5
-
-# Number of random styles to combine for each image
-numStylesPerImage=15
-
 # Define the output directory
-outputDir=~/tmp/fireflyStyles
+outputDir=~/tmp/fireflyAllStylesCombined
 mkdir -p "$outputDir"
-mkdir -p "$outputDir/labeled"
 
 # Define the prompt
 prompt="Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed"
+
 #prompt="a beautiful alpine meadow filled with wildflowers mountains in background with sun setting an alpine river meanders through"
 
-# Array of all possible styles
 stylePresets=(
     "photo" "art" "graphic" "bw"
     "cool_colors" "golden" "monochromatic" "muted_color"
@@ -77,46 +73,15 @@ stylePresets=(
     "splash_images" "stamp" "trompe_loeil" "vector_look" "wireframe"
 )
 
-# Generate images
-for ((i=1; i<=numImages; i++)); do
-    selectedStyles=() # Reset for each image
+# Join all style presets into a single string separated by spaces
+allStyles="${stylePresets[*]}"
 
-    # Randomly pick unique styles for this image
-    while [ ${#selectedStyles[@]} -lt $numStylesPerImage ]; do
-        # Generate a random index
-        randIndex=$(jot -r 1 1 ${#stylePresets[@]})
-        selectedStyle=${stylePresets[$randIndex-1]} # Adjust for zero-based indexing
-        
-        # Check if the style has already been selected
-        if [[ ! " ${selectedStyles[@]} " =~ " ${selectedStyle} " ]]; then
-            # If not already selected, add to the list
-            selectedStyles+=("$selectedStyle")
-        fi
-    done
+# Define the filename for the image
+filename="all_styles_combined.jpg"
 
-    styleString=$(IFS=,; echo "${selectedStyles[*]}")
-    filename="image_${i}_${styleString//,/_}.jpg"
+echo "Generating image with all styles combined..."
 
-    echo "Generating image $i with styles: $styleString"
+# Pass all styles to firefly command
+firefly --prompt "$prompt" --output-dir "$outputDir" --filename "$filename" --width 1000 --height 1000 --style-presets $allStyles
 
-    firefly --prompt "$prompt" --output-dir "$outputDir" --filename "$filename" --width 1000 --height 1000 --style-presets ${selectedStyles[@]}
-
-    # Create and append label to image (assuming you have ImageMagick installed)
-    labelImagePath="$outputDir/label_temp_${i}.jpg"
-    convert -size 1000x50 xc:white -gravity Center -pointsize 24 -fill black -annotate +0+0 "$styleString" "$labelImagePath"
-
-    convert "$outputDir/$filename" "$labelImagePath" -append "$outputDir/labeled/$filename"
-
-    echo "Image $filename generated and labeled."
-
-    # Optional: sleep to pace requests
-    sleep 10
-done
-
-# Sanitize the prompt to create a valid filename
-sanitizedPrompt=$(echo "$prompt" | tr " " "_" | tr -cd '[:alnum:]_')
-
-# Convert all labeled images into a single PDF
-convert "$outputDir/labeled/*.jpg" "${outputDir}/${sanitizedPrompt}.pdf"
-
-echo "PDF with labeled images has been created."
+echo "Image with all styles combined has been generated."
