@@ -39,7 +39,7 @@ mkdir -p "$outputDir/labeled"
 
 # Define the prompt
 #prompt="Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed"
-prompt="Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed"
+prompt="a beautiful alpine meadow filled with wildflowers mountains in background with sun setting an alpine river meanders through"
 
 # Array of all possible styles
 stylePresets=(
