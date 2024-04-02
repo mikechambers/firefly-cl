@@ -20,44 +20,28 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Takes a specified prompt, and then generates a version for each possible
-# style preset. Saves the images and creates a PDF of the images.
-# Requires that ImageMagick is installed and in path.
+# Takes a specified prompt, randomly combines styles to create images which are
+# then combined in a PDF
+
 
 #!/bin/bash
 
-# Define cleanup function
-cleanup() {
-    echo "Cleaning up..."
-    # Check if the caffeinate process is still running before trying to kill it
-    if kill -0 "$caffeinatePID" 2>/dev/null; then
-        kill "$caffeinatePID"
-    fi
-    # Remove temporary label files
-    find "${outputDir}" -name 'label_temp*.jpg' -delete
-}
+# Number of images to create
+numImages=20
 
-# Setup trap to call cleanup function on script exit, error, or interrupt
-trap cleanup EXIT
-
-# Start caffeinate in the background to prevent sleep
-caffeinate -i &
-caffeinatePID=$!
+# Number of random styles to combine for each image
+numStylesPerImage=5
 
 # Define the output directory
 outputDir=~/tmp/fireflyStyles
-
-# Ensure the output directory and labeled images directory exist
 mkdir -p "$outputDir"
 mkdir -p "$outputDir/labeled"
 
 # Define the prompt
+#prompt="Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed"
 prompt="Big bang universe explosion, supernova blast, made out of colorful bath soaps, super detailed"
 
-
-# Sanitize the prompt to create a valid filename
-sanitizedPrompt=$(echo "$prompt" | tr " " "_" | tr -cd '[:alnum:]_')
-
+# Array of all possible styles
 stylePresets=(
     "photo" "art" "graphic" "bw"
     "cool_colors" "golden" "monochromatic" "muted_color"
@@ -93,35 +77,46 @@ stylePresets=(
     "splash_images" "stamp" "trompe_loeil" "vector_look" "wireframe"
 )
 
-# Loop through each style preset and run the firefly command
-for style in "${stylePresets[@]}"; do
-    filename="${style}.jpg"
-    labeledFilename="${style}_labeled.jpg"
-    echo "Generating image with style: $style"
+# Generate images
+for ((i=1; i<=numImages; i++)); do
+    selectedStyles=() # Reset for each image
 
-    # Assuming firefly command is correctly set to generate the image
-    # Replace with your actual firefly command
-    firefly --prompt "$prompt" --output-dir "$outputDir" --filename "$filename" --width 1000 --height 1000 --style-presets "$style"
+    # Randomly pick unique styles for this image
+    while [ ${#selectedStyles[@]} -lt $numStylesPerImage ]; do
+        # Generate a random index
+        randIndex=$(jot -r 1 1 ${#stylePresets[@]})
+        selectedStyle=${stylePresets[$randIndex-1]} # Adjust for zero-based indexing
+        
+        # Check if the style has already been selected
+        if [[ ! " ${selectedStyles[@]} " =~ " ${selectedStyle} " ]]; then
+            # If not already selected, add to the list
+            selectedStyles+=("$selectedStyle")
+        fi
+    done
 
-    # Create a label with a white background
-    labelImagePath="$outputDir/label_temp_${style}.jpg"
-    convert -size 1000x50 xc:white -gravity Center -pointsize 24 -fill black -annotate +0+0 "$style" "$labelImagePath"
+    styleString=$(IFS=,; echo "${selectedStyles[*]}")
+    filename="image_${i}_${styleString//,/_}.jpg"
 
-    # Append the label to the original image
-    convert "$outputDir/$filename" "$labelImagePath" -append "$outputDir/labeled/$labeledFilename"
+    echo "Generating image $i with styles: $styleString"
 
-    echo "Image $filename generated with label."
+    firefly --prompt "$prompt" --output-dir "$outputDir" --filename "$filename" --width 1000 --height 1000 --style-presets ${selectedStyles[@]}
 
-    # Optional: sleep to pace the requests
+    # Create and append label to image (assuming you have ImageMagick installed)
+    labelImagePath="$outputDir/label_temp_${i}.jpg"
+    convert -size 1000x50 xc:white -gravity Center -pointsize 24 -fill black -annotate +0+0 "$styleString" "$labelImagePath"
+
+    convert "$outputDir/$filename" "$labelImagePath" -append "$outputDir/labeled/$filename"
+
+    echo "Image $filename generated and labeled."
+
+    # Optional: sleep to pace requests
     sleep 10
 done
 
-echo "All style preset images have been generated."
+# Sanitize the prompt to create a valid filename
+sanitizedPrompt=$(echo "$prompt" | tr " " "_" | tr -cd '[:alnum:]_')
 
-# Use ImageMagick to convert all labeled images in the output directory into a single PDF
+# Convert all labeled images into a single PDF
 convert "$outputDir/labeled/*.jpg" "${outputDir}/${sanitizedPrompt}.pdf"
 
-echo "PDF ${sanitizedPrompt}.pdf has been created with labeled images."
-
-# Cleanup at the end
-cleanup
+echo "PDF with labeled images has been created."

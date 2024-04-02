@@ -72,7 +72,7 @@ struct Secrets {
 
 You must include this file, even if you are not including your keys (just set the properties to nil)
 
-You can compile from within xcode or via the command line:
+You can compile from within Xcode or via the command line:
 
 ```
 xcodebuild -scheme firefly -configuration Debug -derivedDataPath ./DerivedData

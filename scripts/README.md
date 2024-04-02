@@ -18,6 +18,12 @@ Bash script that generates one image for each possible style based on the specif
 
 Requires that [ImageMagick](https://imagemagick.org/index.php) is installed and in path.
 
+### rstyles
+
+Bash script that takes a prompt and randomly combines styles (based on your settings), to create images. Useful for finding unique, interesting style combinations.
+
+Requires that [ImageMagick](https://imagemagick.org/index.php) is installed and in path.
+
 ## License
 
 Project released under a [MIT License](LICENSE.md).
