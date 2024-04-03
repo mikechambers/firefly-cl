@@ -28,6 +28,16 @@ Requires that [ImageMagick](https://imagemagick.org/index.php) is installed and 
 
 Bash script that takes a prompt and then generates an image using all possible styles.
 
+### gptprompt.py
+
+Python3 script that takes a prompt and then calls the ChatGPT API to suggests alternatives to the prompt, and then uses firefly to generate all of the prompts.
+
+Requires that you have an [OpenAPI key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key) and that it is stored in the OPENAI_API_KEY environment variable
+
+```
+python3 gptprompt.py --prompt "Big bang universe explosion, supernova blast, made out of colorful powder and dust, super detailed" --output_dir ~/tmp/fireflyOutput
+```
+
 ## License
 
 Project released under a [MIT License](LICENSE.md).
