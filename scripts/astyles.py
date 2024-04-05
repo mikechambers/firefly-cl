@@ -28,15 +28,9 @@ import os
 import subprocess
 from firefly_lib import style_presets, run_firefly_command
 
-def main(prompt, output_dir):
+def generate_image(prompt, output_dir):
     # Ensure the output directory exists
     os.makedirs(output_dir, exist_ok=True)
-
-    # Define the style presets
-
-
-    # Join all style presets into a single string separated by spaces
-    all_styles = " ".join(style_presets)
 
     # Define the filename for the image
     filename = "all_styles_combined.jpg"
@@ -64,4 +58,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Call the main function with parsed arguments
-    main(args.prompt, args.output_dir)
+    generate_image(args.prompt, args.output_dir)
