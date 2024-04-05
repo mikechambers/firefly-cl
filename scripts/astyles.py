@@ -26,7 +26,7 @@
 import argparse
 import os
 import subprocess
-from firefly_lib import style_presets
+from firefly_lib import style_presets, run_firefly_command
 
 def main(prompt, output_dir):
     # Ensure the output directory exists
@@ -43,18 +43,12 @@ def main(prompt, output_dir):
 
     print("Generating image with all styles combined...")
 
-    firefly_cmd_str = ' '.join([
-        "firefly",
-        f"--prompt \"{prompt}\"",
-        f"--output-dir \"{output_dir}\"",
-        f"--filename \"{filename}\"",
-        "--width 1000",
-        "--height 1000",
-        "--style-presets", ' '.join(style_presets)  # Join the style presets
-    ])
+    style_args = []
+    for style in style_presets:
+        style_args.append("--style-presets")
+        style_args.append(style)
 
-    # Pass the command to firefly
-    subprocess.run(firefly_cmd_str, shell=True)
+    run_firefly_command(prompt, output_dir, filename, style_args)
 
     print("Image with all styles combined has been generated.")
 

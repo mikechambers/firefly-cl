@@ -22,6 +22,23 @@
 
 
 import re
+import subprocess
+
+def run_firefly_command(prompt, output_dir, filename, args=None):
+    """Construct and run the firefly command with the selected styles."""
+    command = [
+        "firefly",
+        "--prompt", prompt,
+        "--output-dir", output_dir,
+        "--filename", filename,
+        "--width", "1000",
+        "--height", "1000"
+    ]
+
+    if args is not None:
+        command.extend(args)
+
+    subprocess.run(command, check=True)
 
 def sanitize_filename(input_string):
     """
