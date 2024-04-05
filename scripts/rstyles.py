@@ -25,17 +25,7 @@ import argparse
 import os
 import random
 import time
-from PIL import Image, ImageDraw, ImageFont
 from firefly_lib import sanitize_filename, style_presets, run_firefly_command
-
-def write_label_on_image(image):
-    Im = ImageDraw.Draw(image)
-    mf = ImageFont.truetype('Monaco.ttf', 25)
-
-    # Add Text to an image
-    Im.text((15,image.height - 50), "Lady watching movie with her dog", (255,0,0), font=mf)
-
-    return image
 
 def run_command(prompt, output_dir, filename, selected_styles, seed=None):
 
