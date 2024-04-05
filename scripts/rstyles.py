@@ -52,8 +52,6 @@ def run_command(prompt, output_dir, filename, selected_styles, seed=None):
 
 def generate_images(prompt, output_dir, num_images, num_styles_per_image, style_presets, seed):
     os.makedirs(output_dir, exist_ok=True)
-    #labeled_output_dir = os.path.join(output_dir, "labeled")
-    #os.makedirs(labeled_output_dir, exist_ok=True)
 
     for i in range(1, num_images + 1):
         selected_styles = random.sample(style_presets, num_styles_per_image)
