@@ -23,16 +23,66 @@
 
 import re
 import subprocess
+import os
+from PIL import Image, ImageDraw, ImageFont
 
-def run_firefly_command(prompt, output_dir, filename, args=None):
+def write_label_on_image(image_path, output_dir, label):
+    image = Image.open(image_path)
+    im = ImageDraw.Draw(image)
+
+    # Define the rectangle dimensions
+    # For a 1000x1000 image, and rectangle height of 100 pixels at the bottom
+    rect_start = (0, image.height - 50)
+    rect_end = (image.width, image.height)
+
+    # Draw a white rectangle at the bottom
+    im.rectangle([rect_start, rect_end], fill=(255,255,255))
+
+    try:
+        # Attempt to load the custom font
+        mf = ImageFont.truetype('Monaco.ttf', 25)
+    except IOError:
+        # Fallback to the default font if Monaco.ttf is not available
+        mf = ImageFont.load_default()
+        print("Fallback to the default font")
+
+    text_color = "#333333"
+
+    im.text((1000/2, image.height - 25), label, anchor='mm', fill=text_color, font=mf)
+
+    path = os.path.join(output_dir, f"{label}.jpg")
+    image.save(path)
+
+
+def create_pdf_from_images(folder_path, output_pdf_path):
+    # Get all image paths
+    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.jpg')]
+    image_files.sort()  # Ensure the files are sorted alphabetically
+
+    # Ensure there's at least one image
+    if not image_files:
+        print("No images found in the folder.")
+        return
+
+    # Open the first image to create the PDF
+    first_image = Image.open(image_files[0]).convert('RGB')
+    
+    # Convert remaining images to PIL images and append to a list
+    other_images = [Image.open(img).convert('RGB') for img in image_files[1:]]
+    
+    # Save the images as a PDF
+    first_image.save(output_pdf_path, save_all=True, append_images=other_images)
+    print(f"PDF created successfully: {output_pdf_path}")
+
+def run_firefly_command(prompt, output_dir, filename, width=1000, height=1000, args=None):
     """Construct and run the firefly command with the selected styles."""
     command = [
         "firefly",
         "--prompt", prompt,
         "--output-dir", output_dir,
         "--filename", filename,
-        "--width", "1000",
-        "--height", "1000"
+        "--width", f"{width}",
+        "--height", f"{height}"
     ]
 
     if args is not None:

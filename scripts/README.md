@@ -6,6 +6,18 @@ Collection of Python 3 scripts using the firefly command line app.
 
 ## Scripts
 
+### prompt.py
+
+Python3 script that takes a prompt and generates the specified number of variations
+
+Individual images and a PDF are created with the information necessary to recreate the images.
+
+```
+python3 prompt.py --prompt "Big bang universe explosion, supernova blast, made out of colorful powder and dust, super detailed" --num_generations 20 --output_dir ~/tmp/fireflyOutput
+```
+
+Requires the Python [Pillow library](https://python-pillow.org/) is installed.
+
 ### recursive.py
 
 Python 3 script that recursively generates an image, feeding the previously generated image in as a style reference, and then outputs all of the file and a video.

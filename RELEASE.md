@@ -4,6 +4,7 @@
 
 -   Fixed issue where auth token not updated correctly when using new client id / secret
 -   Added --clear flag to remove stored Firefly client, id and auth tokens
+-   Ported all scripts to python and added a lot of new scripts
 
 ## v0.85.1 March 31, 2024
 
