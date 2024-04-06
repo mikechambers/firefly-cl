@@ -46,13 +46,16 @@ struct Firefly : AsyncParsableCommand {
 
 
 	@Option(name: .long, help: "Text prompt for image generation.")
-	var prompt: String
+	var prompt: String?
 	
 	@Option(name: .long, help: "The model will avoid these words in the generated content.")
 	var negativePrompt: String?
 	
 	@Option(help: "The directory that generated images will be written to.", completion: .directory)
-	var outputDir: String
+	var outputDir: String?
+	
+	@Flag(name: .long, help: "Clear saved Firefly ID, Secret and authentication tokens.")
+	var clear: Bool = false
 	
 	@Option(
 		help: "Path to image to use as a style reference.",
@@ -92,7 +95,7 @@ struct Firefly : AsyncParsableCommand {
 
 	
 	@Option(
-		help: "Adjusts the overall intensity of your photo's existing visual characteristics. 2 to 10. Default: 6",
+		help: "Adjusts the overall intensity of your photo's existing visual characteristics. 2 to 10. Default: 6.",
 		transform: {
 			guard let value = Int($0), value >= 2, value <= 10 else {
 				throw ValidationError("Visual intensity must be between 2 and 10.")
@@ -201,6 +204,21 @@ struct Firefly : AsyncParsableCommand {
 	
 	mutating func run() async throws {
 		
+		let authManager = AuthManager()
+		
+		if clear {
+			authManager.clear()
+			return
+		}
+		
+		guard var outputDir = outputDir else {
+			throw ValidationError("--output-dir and --prompt are required when --clear is not set")
+		}
+		
+		guard var prompt = prompt else {
+			throw ValidationError("--output-dir and --prompt are required when --clear is not set")
+		}
+		
 		Global.verbose = verbose
 		
 		//these should be set in validate() which is called at start up by
@@ -211,8 +229,6 @@ struct Firefly : AsyncParsableCommand {
 		
 		//Expand tildes so paths resolve correctly
 		outputDir = (outputDir as NSString).expandingTildeInPath
-		
-		let authManager = AuthManager()
 		
 		//Get auth token (either stored, and retrieve a new one)
 		do {
@@ -396,6 +412,16 @@ struct Firefly : AsyncParsableCommand {
 	//validates input, automatically called at start up by ArgumentParser
 	mutating func validate() throws {
 		
+		if !clear {
+			if prompt == nil || outputDir == nil {
+				throw ValidationError("Both --output-dir and --prompt are required unless '--clear' is specified.")
+			}
+		} else {
+			if prompt != nil || outputDir != nil {
+				throw ValidationError("--output-dir and --prompt are not allowed when '--clear' is specified.")
+			}
+		}
+		
 		// Check if one dimension is provided and the other is not
 		if (width == nil) != (height == nil) { // Equivalent to XOR operation
 			throw ValidationError("Both width and height must be provided together.")
@@ -432,7 +458,7 @@ struct Firefly : AsyncParsableCommand {
 			throw ValidationError("Both --clientId and --clientSecret must be provided together.")
 		}
 		
-		if prompt.count < 1 || prompt.count > 1024 {
+		if let prompt, prompt.count < 1 || prompt.count > 1024 {
 			throw ValidationError("The prompt must be between 1 and 1024 characters in length.")
 		}
 		

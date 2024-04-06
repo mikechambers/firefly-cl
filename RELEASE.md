@@ -3,6 +3,7 @@
 ## v0.85.2 April 6, 2024
 
 -   Fixed issue where auth token not updated correctly when using new client id / secret
+-   Added --clear flag to remove stored Firefly client, id and auth tokens
 
 ## v0.85.1 March 31, 2024
 

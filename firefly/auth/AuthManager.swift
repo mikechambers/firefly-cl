@@ -83,8 +83,6 @@ class AuthManager {
 
 		_token = authToken
 		_expires = expiresDate
-		
-		print(authToken)
 	}
 	
 	//clear saved token / data
@@ -92,6 +90,7 @@ class AuthManager {
 		let defaults = UserDefaults.standard
 		defaults.removeObject(forKey: authTokenKey)
 		defaults.removeObject(forKey: authExpiresKey)
+		defaults.removeObject(forKey: clientIdKey)
 	}
 	
 	// Getter for expires property
