@@ -204,6 +204,8 @@ struct Firefly : AsyncParsableCommand {
 	
 	mutating func run() async throws {
 		
+		Global.verbose = verbose
+		
 		let authManager = AuthManager()
 		
 		if clear {
@@ -211,15 +213,10 @@ struct Firefly : AsyncParsableCommand {
 			return
 		}
 		
-		guard var outputDir = outputDir else {
+		//this should be caught in validate, but we need to convert from Options
+		guard var outputDir = outputDir, var prompt = prompt else {
 			throw ValidationError("--output-dir and --prompt are required when --clear is not set")
 		}
-		
-		guard var prompt = prompt else {
-			throw ValidationError("--output-dir and --prompt are required when --clear is not set")
-		}
-		
-		Global.verbose = verbose
 		
 		//these should be set in validate() which is called at start up by
 		//ArgumentParser
