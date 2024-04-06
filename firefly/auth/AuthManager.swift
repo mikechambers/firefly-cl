@@ -30,6 +30,7 @@ class AuthManager {
 	
 	private let authTokenKey = "AUTH_TOKEN"
 	private let authExpiresKey = "AUTH_EXPIRES"
+	private let clientIdKey = "CLIENT_ID_KEY"
 	private let authBufferSeconds: TimeInterval = -3600
 	
 	private var _expires:Date?
@@ -42,9 +43,11 @@ class AuthManager {
 		
 		var authToken = defaults.string(forKey: authTokenKey)
 		var expiresDate = defaults.object(forKey: authExpiresKey) as? Date
+		var clientId = defaults.string(forKey: clientIdKey)
 
 		//check if we have a valid token, and it has not expired
-		if let expiresDate = expiresDate, Date.now <= expiresDate, let authToken = authToken {
+		if let expiresDate = expiresDate, Date.now <= expiresDate,
+		   let authToken = authToken, let clientId = clientId, clientId == fireflyClientId {
 			// Token is valid and not expired
 			_token = authToken
 			_expires = expiresDate
@@ -75,11 +78,13 @@ class AuthManager {
 			// Save the new authToken and its expiration date to UserDefaults
 			defaults.set(authToken, forKey: authTokenKey)
 			defaults.set(expiresDate, forKey: authExpiresKey)
+			defaults.set(fireflyClientId, forKey: clientIdKey)
 		}
 
-		
 		_token = authToken
 		_expires = expiresDate
+		
+		print(authToken)
 	}
 	
 	//clear saved token / data
