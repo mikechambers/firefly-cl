@@ -52,8 +52,10 @@ def sanitize_filename(input_string):
     
     # Remove characters that are not allowed in file names
     sanitized = re.sub(r'[<>:"/\\|?*]', '', sanitized)
+
+
     
-    return sanitized
+    return sanitized[:250]
 
 style_presets = [
     "photo", "art", "graphic", "bw",
