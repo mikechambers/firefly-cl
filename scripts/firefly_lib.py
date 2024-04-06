@@ -74,7 +74,7 @@ def create_pdf_from_images(folder_path, output_pdf_path):
     first_image.save(output_pdf_path, save_all=True, append_images=other_images)
     print(f"PDF created successfully: {output_pdf_path}")
 
-def run_firefly_command(prompt, output_dir, filename, width=1000, height=1000, args=None):
+def run_firefly_command(prompt, output_dir, filename, width=1000, height=1000, options=None):
     """Construct and run the firefly command with the selected styles."""
     command = [
         "firefly",
@@ -85,8 +85,8 @@ def run_firefly_command(prompt, output_dir, filename, width=1000, height=1000, a
         "--height", f"{height}"
     ]
 
-    if args is not None:
-        command.extend(args)
+    if options is not None:
+        command.extend(options)
 
     subprocess.run(command, check=True)
 

@@ -56,7 +56,7 @@ def generate_images(prompt, output_dir, num_generations):
     for i in range(num_generations):
         filename = f"{i}.jpg"
 
-        run_firefly_command(prompt, output_dir, filename, height=height, width=width, args=commands)
+        run_firefly_command(prompt, output_dir, filename, height=height, width=width, options=commands)
 
         path = os.path.join(output_dir, filename)
 
@@ -83,9 +83,9 @@ if __name__ == "__main__":
     
     # Add named command-line arguments
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")
-    parser.add_argument("--output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
+    parser.add_argument("--output-dir", dest="output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
 
-    parser.add_argument("--num_generations", type=int, default=5, help="Number of images to create.")
+    parser.add_argument("--num-generations", dest="num_generations", type=int, default=5, help="Number of images to create.")
     
     # Parse the command-line arguments
     args = parser.parse_args()

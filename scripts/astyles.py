@@ -38,11 +38,12 @@ def generate_image(prompt, output_dir):
     print("Generating image with all styles combined...")
 
     style_args = []
+    
     for style in style_presets:
         style_args.append("--style-presets")
         style_args.append(style)
 
-    run_firefly_command(prompt, output_dir, filename, style_args)
+    run_firefly_command(prompt, output_dir, filename, options=style_args)
 
     print("Image with all styles combined has been generated.")
 
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     
     # Add named command-line arguments
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")
-    parser.add_argument("--output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
+    parser.add_argument("--output-dir", dest="output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
     
     # Parse the command-line arguments
     args = parser.parse_args()

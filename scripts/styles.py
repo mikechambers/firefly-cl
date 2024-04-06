@@ -45,7 +45,7 @@ def main(prompt, output_dir):
             "--seeds", "100001"
         ]
 
-        run_firefly_command(prompt, output_dir, filename, commands)
+        run_firefly_command(prompt, output_dir, filename, options=commands)
 
         path = os.path.join(output_dir, filename)
         write_label_on_image(path, label_dir, style)
@@ -59,7 +59,7 @@ def main(prompt, output_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate images with random styles using the firefly command.")
     parser.add_argument("--prompt", required=True, help="The prompt for the image generation.")
-    parser.add_argument("--output_dir", required=True, help="Directory where images will be saved.")
+    parser.add_argument("--output-dir", dest="output_dir", required=True, help="Directory where images will be saved.")
     
     args = parser.parse_args()
 

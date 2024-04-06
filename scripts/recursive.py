@@ -44,7 +44,8 @@ def generate_images(prompt, output_dir, num_generations):
             "--reference-image", referenceImage
         ]
 
-        run_firefly_command(prompt, output_dir, currentFileName, commands)
+        print(f"Generating : {currentFileName}")
+        run_firefly_command(prompt, output_dir, currentFileName, options=commands)
 
         referenceImage = os.path.join(output_dir, currentFileName)
 
@@ -52,6 +53,11 @@ def generate_images(prompt, output_dir, num_generations):
 
 
 def create_video(output_dir):
+
+    filepath = f"{output_dir}/firefly_recursive.mp4"
+
+    print(f"Generating video: {filepath}")
+
     ffmpeg_command = [
         "ffmpeg",
         "-y",  # Overwrite output files without asking
@@ -62,7 +68,7 @@ def create_video(output_dir):
         "-vcodec", "libx264",  # Output video codec
         "-crf", "25",  # Constant Rate Factor (quality level of the output video)
         "-pix_fmt", "yuv420p",  # Pixel format
-        f"{output_dir}/firefly_recursive.mp4"  # Output file
+        filepath  # Output file
     ]
 
     # Execute the command
@@ -71,8 +77,8 @@ def create_video(output_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate images with random styles using the firefly command.")
     parser.add_argument("--prompt", required=True, help="The prompt for the image generation.")
-    parser.add_argument("--output_dir", required=True, help="Directory where images will be saved.")
-    parser.add_argument("--num_generations", type=int, default=5, help="Number of images to create.")
+    parser.add_argument("--output-dir", dest="output_dir", required=True, help="Directory where images will be saved.")
+    parser.add_argument("--num-generations", dest="num_generations", type=int, default=5, help="Number of images to create.")
     
     args = parser.parse_args()
 

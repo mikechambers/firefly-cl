@@ -34,7 +34,7 @@ import sys
 import time
 from firefly_lib import run_firefly_command, sanitize_filename
 
-def main(prompt, output_dir, num_prompts):
+def main(prompt, output_dir, num_prompts, generate):
 
     # Retrieve the API key from an environment variable
     openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -57,7 +57,7 @@ def main(prompt, output_dir, num_prompts):
         "messages": [
             {
                 "role": "system",
-                "content": f"you are a generative ai prompt master for Adobe's firefly text to image engine. When given a prompt, you will return {num_prompts} alternatives to the prompt for the user to use to try to get more interesting and exciting results. Return the results as a json object"
+                "content": f"you are a generative ai prompt master for Adobe's firefly text to image engine. When given a prompt, you will return {num_prompts} alternatives to the prompt for the user to use to try to get more interesting and exciting results. Return the results as valid JSON array of Strings"
             },
             {
                 "role": "user",
@@ -72,8 +72,12 @@ def main(prompt, output_dir, num_prompts):
 
     prompts = json.loads(response.json()['choices'][0]['message']['content'])
 
-    for key, prompt in prompts.items():
-        print(f"Processing prompt: {prompt}")
+    for prompt in prompts:
+
+        print(f"{prompt}")
+
+        if not generate:
+            continue
         
         filename = f"{sanitize_filename(prompt)}.jpg"
 
@@ -81,7 +85,7 @@ def main(prompt, output_dir, num_prompts):
             "--seeds", "100001"
         ]
 
-        run_firefly_command(prompt, output_dir, filename, commands)
+        run_firefly_command(prompt, output_dir, filename, options=commands)
 
         time.sleep(10)
 
@@ -91,10 +95,12 @@ if __name__ == "__main__":
 
     # Add named command-line arguments
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")
-    parser.add_argument("--output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
-    parser.add_argument("--num_prompts", type=int, default=5, help="Number of prompts to generate.")
+    parser.add_argument("--output-dir", dest="output_dir", type=str, required=True, help="The directory where the generated image will be saved.")
+    parser.add_argument("--num-prompts", dest="num_prompts", type=int, default=5, help="Number of prompts to generate.")
+
+    parser.add_argument('--generate', dest='generate', action='store_true', help='Disable backup.')
 
     # Parse the command-line arguments
     args = parser.parse_args()
-
-    main(args.prompt, args.output_dir, args.num_prompts)
+    
+    main(args.prompt, args.output_dir, args.num_prompts, args.generate)

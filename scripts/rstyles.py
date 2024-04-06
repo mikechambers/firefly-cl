@@ -36,7 +36,7 @@ def run_command(prompt, output_dir, filename, selected_styles, seed=None):
     if seed is not None:
         command += ["--seeds", str(seed)]
 
-    run_firefly_command(prompt, output_dir, filename, command)
+    run_firefly_command(prompt, output_dir, filename, options=command)
 
     
 
@@ -47,7 +47,7 @@ def generate_images(prompt, output_dir, num_images, num_styles_per_image, style_
         selected_styles = random.sample(style_presets, num_styles_per_image)
 
         n = ' '.join(selected_styles)
-        print(n)
+
         n = sanitize_filename(n)
         filename = f"{n}.png"
 
@@ -59,9 +59,9 @@ def generate_images(prompt, output_dir, num_images, num_styles_per_image, style_
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate images with random styles using the firefly command.")
     parser.add_argument("--prompt", required=True, help="The prompt for the image generation.")
-    parser.add_argument("--output_dir", required=True, help="Directory where images will be saved.")
-    parser.add_argument("--num_images", type=int, default=5, help="Number of images to create.")
-    parser.add_argument("--num_styles", type=int, default=5, help="Number of random styles to combine for each image.")
+    parser.add_argument("--output-dir", dest="output_dir", required=True, help="Directory where images will be saved.")
+    parser.add_argument("--num-images", dest="num_images", type=int, default=5, help="Number of images to create.")
+    parser.add_argument("--num-styles", dest="num_styles", type=int, default=5, help="Number of random styles to combine for each image.")
     parser.add_argument("--seed", type=int, default=None, help="Seed to use to generate image. If not set, random seed will be used")
     
     args = parser.parse_args()
