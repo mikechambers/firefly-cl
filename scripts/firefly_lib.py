@@ -26,6 +26,25 @@ import subprocess
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+def create_video_from_images(input_dir, filepath, images_per_second = 3, width=1000, height=1000):
+
+    ffmpeg_command = [
+        "ffmpeg",
+        "-framerate", "1",
+        "-r", f"{images_per_second}",  # Frame rate
+        "-y",  # Overwrite output files without asking
+        "-f", "image2",  # Input format
+        "-s", f"{width}x{height}",  # Size of the output video
+        "-i", f"{input_dir}/%d.jpg",  # Input file pattern
+        "-vcodec", "libx264",  # Output video codec
+        "-crf", "25",  # Constant Rate Factor (quality level of the output video)
+        "-pix_fmt", "yuv420p",  # Pixel format
+        filepath  # Output file
+    ]
+
+    # Execute the command
+    subprocess.run(ffmpeg_command, check=True)
+
 def write_label_on_image(image_path, output_dir, label):
     image = Image.open(image_path)
     im = ImageDraw.Draw(image)
