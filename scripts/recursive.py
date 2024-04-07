@@ -75,7 +75,7 @@ def create_video(output_dir):
     subprocess.run(ffmpeg_command, check=True)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate images with random styles using the firefly command.")
+    parser = argparse.ArgumentParser(description="Create a video from generated images that uses the previous image as a style reference.")
     parser.add_argument("--prompt", required=True, help="The prompt for the image generation.")
     parser.add_argument("--output-dir", dest="output_dir", required=True, help="Directory where images will be saved.")
     parser.add_argument("--num-generations", dest="num_generations", type=int, default=5, help="Number of images to create.")

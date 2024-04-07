@@ -54,7 +54,7 @@ def generate_images(prompt, output_dir, num_images, num_styles_per_image, style_
         n = ' '.join(selected_styles)
 
         n = sanitize_filename(n)
-        filename = f"{n}.png"
+        filename = f"{n}.jpg"
 
         run_command(prompt, output_dir, filename, selected_styles, seed)
 

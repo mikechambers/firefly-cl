@@ -91,7 +91,7 @@ def main(prompt, output_dir, num_prompts, generate):
 
 if __name__ == "__main__":
     # Initialize the argument parser
-    parser = argparse.ArgumentParser(description="Generate images based on prompts using the firefly command.")
+    parser = argparse.ArgumentParser(description="Have ChatGPT suggest alternative prompts and then alternatively generate them.")
 
     # Add named command-line arguments
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")

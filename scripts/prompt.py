@@ -79,7 +79,7 @@ def generate_images(prompt, output_dir, num_generations):
 
 if __name__ == "__main__":
     # Initialize the argument parser
-    parser = argparse.ArgumentParser(description="Generate images based on prompts using the firefly command.")
+    parser = argparse.ArgumentParser(description="Generate an image from the prompt the specified number of times.")
     
     # Add named command-line arguments
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")

@@ -26,7 +26,7 @@ Python 3 script that recursively generates an image, feeding the previously gene
 python3 recursive.py --prompt "Big bang universe explosion, supernova blast, made out of colorful powder and dust, super detailed" --output-dir ~/tmp/fireflyOutput --num-generations 20
 ```
 
-Requires that [ffmpeg](https://ffmpeg.org/) is install and in path.
+Requires that [ffmpeg](https://ffmpeg.org/) is installed and in path.
 
 ### styles.py
 
@@ -65,6 +65,16 @@ Requires that you have an [OpenAPI key](https://help.openai.com/en/articles/4936
 ```
 python3 gptprompt.py --prompt "Big bang universe explosion, supernova blast, made out of colorful powder and dust, super detailed" --output-dir ~/tmp/fireflyOutput --num-prompts = 5 --generate
 ```
+
+### cvideo.py
+
+Python3 script that takes a folder of jpgs and converts it to an mp4 videos playing 3 images per second
+
+```
+python3 cvideo.py --input-dir ~/tmp/fireflyOutput --rename
+```
+
+Requires that [ffmpeg](https://ffmpeg.org/) is installed and in path.
 
 ### firefly_lib.py
 

@@ -57,7 +57,7 @@ def main(prompt, output_dir):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate images with random styles using the firefly command.")
+    parser = argparse.ArgumentParser(description="Generate one image for each style preset.")
     parser.add_argument("--prompt", required=True, help="The prompt for the image generation.")
     parser.add_argument("--output-dir", dest="output_dir", required=True, help="Directory where images will be saved.")
     
