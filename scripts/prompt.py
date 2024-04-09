@@ -30,8 +30,8 @@ import time
 import json
 
 
-height = 1000
-width = 1000
+height = 2048
+width = 2048
 
 #add style presets here
 #style_presets = ["photo", "art", "graphic", "bw"]

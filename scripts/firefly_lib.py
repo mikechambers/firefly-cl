@@ -26,7 +26,7 @@ import subprocess
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-def create_video_from_images(input_dir, filepath, images_per_second = 3, width=1000, height=1000):
+def create_video_from_images(input_dir, filepath, images_per_second = 3, width=2048, height=2048):
 
     ffmpeg_command = [
         "ffmpeg",
@@ -50,7 +50,7 @@ def write_label_on_image(image_path, output_dir, label):
     im = ImageDraw.Draw(image)
 
     # Define the rectangle dimensions
-    # For a 1000x1000 image, and rectangle height of 100 pixels at the bottom
+    # rectangle height of 100 pixels at the bottom
     rect_start = (0, image.height - 50)
     rect_end = (image.width, image.height)
 
@@ -67,7 +67,7 @@ def write_label_on_image(image_path, output_dir, label):
 
     text_color = "#333333"
 
-    im.text((1000/2, image.height - 25), label, anchor='mm', fill=text_color, font=mf)
+    im.text((2048/2, image.height - 25), label, anchor='mm', fill=text_color, font=mf)
 
     path = os.path.join(output_dir, f"{label}.jpg")
     image.save(path)
@@ -93,7 +93,7 @@ def create_pdf_from_images(folder_path, output_pdf_path):
     first_image.save(output_pdf_path, save_all=True, append_images=other_images)
     print(f"PDF created successfully: {output_pdf_path}")
 
-def run_firefly_command(prompt, output_dir, filename, width=1000, height=1000, options=None):
+def run_firefly_command(prompt, output_dir, filename, width=2048, height=2048, options=None):
     """Construct and run the firefly command with the selected styles."""
     command = [
         "firefly",
