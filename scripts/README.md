@@ -76,6 +76,16 @@ python3 cvideo.py --input-dir ~/tmp/fireflyOutput --rename
 
 Requires that [ffmpeg](https://ffmpeg.org/) is installed and in path.
 
+### scale.py
+
+Python3 script that uses [REAL-ESRGAN](https://github.com/xinntao/Real-ESRGAN) to scale up directories of Firefly generated JPGs. By default it creates PNGs, but you can specify JPGs with the _--format_ argument
+
+```
+python3 scale.py --input-dir /Users/mesh/tmp/fireflyOutput/ --scale 2
+```
+
+Requires that [REAL-ESRGAN](https://github.com/xinntao/Real-ESRGAN) executable is placed into system path and named `realesrgan`. Assumes that included models are placed in `~/bin/models/` directory. Can also specify via the _--model-dir_ arguments.
+
 ### firefly_lib.py
 
 Library of code shared across the scripts.
