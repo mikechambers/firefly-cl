@@ -80,6 +80,8 @@ Requires that [ffmpeg](https://ffmpeg.org/) is installed and in path.
 
 Python3 script that uses [REAL-ESRGAN](https://github.com/xinntao/Real-ESRGAN) to scale up directories of Firefly generated JPGs. By default it creates PNGs, but you can specify JPGs with the _--format_ argument
 
+Scaled files will be saved in the _scaled_ directory created in the _--input-dir_
+
 ```
 python3 scale.py --input-dir /Users/mesh/tmp/fireflyOutput/ --scale 2
 ```
