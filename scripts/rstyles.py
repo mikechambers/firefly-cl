@@ -29,8 +29,7 @@ from firefly_lib import sanitize_filename, style_presets, run_firefly_command
 
 write_settings = False
 
-#these styles will not be used. You can specify additiona ones via the
-#--ignore-styles argument
+#these styles will not be used. You can override using --ignore-styles argument
 ignore_styles = ["newspaper_collage", "photographed_through_window"]
 
 styles = style_presets
@@ -83,6 +82,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     write_settings = args.write_settings
-    ignore_styles = args.ignore_styles + ignore_styles
+
+    if args.ignore_styles is not None:
+        ignore_styles = ignore_styles + args.ignore_styles
+
+    print(ignore_styles)
 
     generate_images(args.prompt, args.output_dir, args.num_images, args.num_styles, args.seed)
