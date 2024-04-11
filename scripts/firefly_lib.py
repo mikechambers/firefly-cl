@@ -124,7 +124,7 @@ def sanitize_filename(input_string):
 
 
     
-    return sanitized[:250]
+    return sanitized[:245]
 
 style_presets = [
     "photo", "art", "graphic", "bw",
