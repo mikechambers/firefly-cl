@@ -84,8 +84,9 @@ if __name__ == "__main__":
     write_settings = args.write_settings
 
     if args.ignore_styles is not None:
-        ignore_styles = ignore_styles + args.ignore_styles
-
-    print(ignore_styles)
+        if args.ignore_styles:
+            ignore_styles = ignore_styles + args.ignore_styles
+        else:
+            ignore_styles = []
 
     generate_images(args.prompt, args.output_dir, args.num_images, args.num_styles, args.seed)
