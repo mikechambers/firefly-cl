@@ -77,11 +77,16 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=None, help="Seed to use to generate image. If not set, random seed will be used")
     parser.add_argument('--ignore-styles', dest="ignore_styles", nargs='*', help='A list of styles that will not be used.')
 
+    parser.add_argument('--styles', dest="styles", nargs='+', help='A list of styles to pull random styles from.')
+
     parser.add_argument('--write-settings', dest='write_settings', action='store_true', help='Disable backup.')
     
     args = parser.parse_args()
 
     write_settings = args.write_settings
+
+    if args.styles:
+        styles = args.styles
 
     if args.ignore_styles is not None:
         if args.ignore_styles:
