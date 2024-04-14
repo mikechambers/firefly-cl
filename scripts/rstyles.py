@@ -32,7 +32,7 @@ write_settings = False
 #these styles will not be used. You can override using --ignore-styles argument
 ignore_styles = [
     "newspaper_collage", "photographed_through_window", "stamp", 
-    "interior_design"
+    "interior_design", "stippling_drawing", "polka-dot_pattern", "doodle_drawing"
 ]
 
 styles = style_presets
