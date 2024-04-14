@@ -88,6 +88,16 @@ python3 scale.py --input-dir /Users/mesh/tmp/fireflyOutput/ --scale 2
 
 Requires that [REAL-ESRGAN](https://github.com/xinntao/Real-ESRGAN) executable is placed into system path and named `realesrgan`. Assumes that included models are placed in `~/bin/models/` directory. Can also specify via the _--model-dir_ arguments.
 
+### clean.py
+
+Script that cleans up orphaned setting JSON files (setting files that dont have a corresponding jpg file)
+
+By default it will copy the orphaned setting files into a directory called _removed_ created in the _--input-dir_
+
+```
+python3 clean.py --input-dir /Users/mesh/tmp/fireflyOutput/
+```
+
 ### firefly_lib.py
 
 Library of code shared across the scripts.
