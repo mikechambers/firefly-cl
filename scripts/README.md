@@ -98,6 +98,14 @@ By default it will copy the orphaned setting files into a directory called _remo
 python3 clean.py --input-dir /Users/mesh/tmp/fireflyOutput/
 ```
 
+### csv.py
+
+Script that creates a CSV file with data from image setting json files contained in a folder
+
+```
+python3 export.py --input-dir /Users/mesh/tmp/fireflyOutput/
+```
+
 ### firefly_lib.py
 
 Library of code shared across the scripts.
