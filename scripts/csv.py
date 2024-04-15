@@ -27,6 +27,7 @@
 import argparse
 import os
 import json
+import random
 
 input_dir = None
 style_count = 10
@@ -38,13 +39,20 @@ def main():
         return
     
     rows = []
+
+
+    files = []
     for filename in os.listdir(input_dir):
+
         if not filename.lower().endswith('.json'):
             continue
 
-        json_path = os.path.join(input_dir, filename)
+        files.append(filename)
 
-        
+    random.shuffle(files)
+
+    for filename in files:
+        json_path = os.path.join(input_dir, filename)
 
         with open(json_path, 'r') as file:
             data = json.load(file)
