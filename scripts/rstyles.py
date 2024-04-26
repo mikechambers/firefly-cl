@@ -26,7 +26,7 @@ import argparse
 import os
 import random
 import time
-from firefly_lib import sanitize_filename, style_presets, run_firefly_command
+from firefly_lib import sanitize_filename, style_presets, run_firefly_command, call_delay
 
 write_settings = False
 
@@ -72,7 +72,7 @@ def generate_images(prompt, output_dir, num_images, num_styles_per_image, seed):
         except Exception as e:
             print(f"Caught an unexpected error calling firefly: {e}")
 
-        time.sleep(10)
+        time.sleep(call_delay)
 
 
 if __name__ == "__main__":

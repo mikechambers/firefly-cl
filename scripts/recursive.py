@@ -25,7 +25,7 @@
 
 import argparse
 import os
-from firefly_lib import run_firefly_command
+from firefly_lib import run_firefly_command, call_delay
 import time
 import subprocess
 
@@ -49,7 +49,7 @@ def generate_images(prompt, output_dir, num_generations):
 
         referenceImage = os.path.join(output_dir, currentFileName)
 
-        time.sleep(10)
+        time.sleep(call_delay)
 
 
 def create_video(output_dir):

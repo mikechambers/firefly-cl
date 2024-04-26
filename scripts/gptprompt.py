@@ -32,7 +32,7 @@ import json
 import subprocess
 import sys
 import time
-from firefly_lib import run_firefly_command, sanitize_filename
+from firefly_lib import run_firefly_command, sanitize_filename, call_delay
 
 def main(prompt, output_dir, num_prompts, generate):
 
@@ -87,7 +87,7 @@ def main(prompt, output_dir, num_prompts, generate):
 
         run_firefly_command(prompt, output_dir, filename, options=commands)
 
-        time.sleep(10)
+        time.sleep(call_delay)
 
 if __name__ == "__main__":
     # Initialize the argument parser

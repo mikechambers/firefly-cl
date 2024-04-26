@@ -27,7 +27,7 @@
 import argparse
 import os
 import time
-from firefly_lib import run_firefly_command, sanitize_filename, style_presets, write_label_on_image, create_pdf_from_images
+from firefly_lib import run_firefly_command, sanitize_filename, style_presets, write_label_on_image, create_pdf_from_images, call_delay
 
 def main(prompt, output_dir): 
     os.makedirs(output_dir, exist_ok=True)
@@ -49,7 +49,7 @@ def main(prompt, output_dir):
 
         path = os.path.join(output_dir, filename)
         write_label_on_image(path, label_dir, style)
-        time.sleep(10)
+        time.sleep(call_delay)
 
     pdf_name = sanitize_filename(prompt)
     pdf_path = os.path.join(output_dir, f"{pdf_name}.pdf")

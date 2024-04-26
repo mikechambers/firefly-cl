@@ -1,6 +1,6 @@
 import argparse
 import sys
-from firefly_lib import sanitize_filename, run_firefly_command
+from firefly_lib import sanitize_filename, run_firefly_command, call_delay
 import time
 import requests
 import json
@@ -83,7 +83,7 @@ def generate_prompts_with_chatgpt(responses, num_prompts, output_dir):
 
         run_firefly_command(prompt, output_dir, filename)
 
-        time.sleep(10)
+        time.sleep(call_delay)
 
 def main(output_dir, num_prompts):
     responses = get_user_input()

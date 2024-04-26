@@ -25,7 +25,7 @@
 
 import argparse
 import os
-from firefly_lib import sanitize_filename, run_firefly_command, write_label_on_image, create_pdf_from_images
+from firefly_lib import sanitize_filename, run_firefly_command, write_label_on_image, create_pdf_from_images, call_delay
 import time
 import json
 
@@ -71,7 +71,7 @@ def generate_images(prompt, output_dir, num_generations):
 
             print(f"{filename} generated with seed : {seed}")
 
-        time.sleep(10)
+        time.sleep(call_delay)
 
     pdf_name = sanitize_filename(prompt)
     pdf_path = os.path.join(output_dir, f"{pdf_name}.pdf")

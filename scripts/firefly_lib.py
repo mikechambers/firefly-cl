@@ -26,6 +26,9 @@ import subprocess
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+#default delay in seconds between calls
+call_delay = 10
+
 def create_video_from_images(input_dir, filepath, images_per_second = 3, width=2600, height=2600):
 
     ffmpeg_command = [
