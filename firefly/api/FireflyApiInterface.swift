@@ -89,7 +89,7 @@ class FireflyApiInterface {
 	
 	//Call API to generate an image (basically text to image)
 	func generateImage(query:GenerateImageQuery) async throws -> GenerateImageResponse {
-		let url = createUrl(host: apiBase, path: "/v2/images/generate")
+		let url = createUrl(host: apiBase, path: "/v3/images/generate")
 	
 		let response : GenerateImageResponse = try await apiClient.postJson(url: url, data: query)
 		

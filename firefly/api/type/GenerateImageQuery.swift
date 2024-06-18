@@ -39,6 +39,7 @@ struct GenerateImageQuery : Codable {
 	let locale:String?
 	let visualIntensity : Int?
 	let styles:GenerateImageStyle?
+	let structure:GenerateImageStructure?
 	let photoSettings:PhotoSettings?
 	
 	init(prompt: String,
@@ -50,6 +51,7 @@ struct GenerateImageQuery : Codable {
 		 locale: String? = nil,
 		 visualIntensity: Int? = nil,
 		 styles:GenerateImageStyle? = nil,
+		 structure:GenerateImageStructure? = nil,
 		 photoSettings:PhotoSettings? = nil
 	) {
 		
@@ -62,8 +64,15 @@ struct GenerateImageQuery : Codable {
 		self.locale = locale
 		self.visualIntensity = visualIntensity
 		self.styles = styles
+		self.structure = structure
 		self.photoSettings = photoSettings
 	}
+}
+
+struct GenerateImageStructure : Codable {
+	let strength:Int?
+	let imageReference:ReferenceImage?
+	
 }
 
 struct GenerateImageStyle : Codable {
@@ -73,7 +82,11 @@ struct GenerateImageStyle : Codable {
 }
 
 struct ReferenceImage : Codable {
-	let id:String
+	let source:Source
+}
+
+struct Source : Codable {
+	let uploadId:String
 }
 
 struct PhotoSettings : Codable {

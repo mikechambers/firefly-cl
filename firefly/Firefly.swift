@@ -57,6 +57,7 @@ struct Firefly : AsyncParsableCommand {
 	@Flag(name: .long, help: "Clear saved Firefly ID, Secret and authentication tokens.")
 	var clear: Bool = false
 	
+	
 	@Option(
 		help: "Path to image to use as a style reference.",
 		completion: .file(extensions: ["jpg", "jpeg", "png", "webp"]),
@@ -69,6 +70,20 @@ struct Firefly : AsyncParsableCommand {
 		}
 	)
 	var referenceImage: URL?
+	
+	
+	@Option(
+		help: "Path to image to use as a structure reference.",
+		completion: .file(extensions: ["jpg", "jpeg", "png", "webp"]),
+		transform: { input in
+			let fileURL = URL(fileURLWithPath: input)
+				guard FileManager.default.fileExists(atPath: fileURL.path) else {
+					throw ValidationError("File does not exist at path: \(input)")
+				}
+				return fileURL
+		}
+	)
+	var structureImage: URL?
 	
 	@Option(help: """
 		Output file name. If only a single image is used, this will be the name of
@@ -92,6 +107,18 @@ struct Firefly : AsyncParsableCommand {
 		}
 	)
 	var styleStrength: Int?
+	
+	
+	@Option(
+		help: "Structure strength. 1 to 100. Default: 60",
+		transform: {
+			guard let value = Int($0), value >= 1, value <= 100 else {
+				throw ValidationError("Style strength must be between 1 and 100.")
+			}
+			return value
+		}
+	)
+	var structureStrength: Int?
 
 	
 	@Option(
@@ -276,7 +303,8 @@ struct Firefly : AsyncParsableCommand {
 			}
 			
 			if let id = id {
-				refImage = ReferenceImage(id: id)
+				let source = Source(uploadId: id)
+				refImage = ReferenceImage(source: source)
 			}
 			
 		}
@@ -301,6 +329,36 @@ struct Firefly : AsyncParsableCommand {
 			shutterSpeed: shutterSpeed,
 			fieldOfView: fieldOfView)
 		
+		var structRefImage:ReferenceImage? = nil
+		
+		//if a style reference image is specified, lets upload and get an ID
+		//for it
+		if let structureImage = structureImage {
+		
+			let id:String?
+			do {
+				id = try await apiInterface.uploadReferenceImage(file: structureImage)
+			} catch {
+				Firefly.exit(withError: AppError.api(
+					details: ErrorDetails(level: .fatal,
+					message: "Error uploading reference image.",
+					error: error)
+				))
+			}
+			
+			if let id = id {
+				let source = Source(uploadId: id)
+				structRefImage = ReferenceImage(source: source)
+			}
+			
+		}
+		
+		
+		var structure:GenerateImageStructure? = nil
+		if structRefImage != nil {
+			structure = GenerateImageStructure(strength: structureStrength, imageReference: structRefImage)
+		}
+		
 		//overall query
 		let query = GenerateImageQuery(
 			prompt:prompt,
@@ -312,6 +370,7 @@ struct Firefly : AsyncParsableCommand {
 			locale: locale,
 			visualIntensity: visualIntensity,
 			styles: style,
+			structure:structure,
 			photoSettings: photoSettings
 		)
 		
@@ -370,10 +429,10 @@ struct Firefly : AsyncParsableCommand {
 			
 			let n = response.outputs.count > 1 ? "\(index)-\(img.seed)-\(baseFilename)" : baseFilename
 			
-			if let url = URL(string: img.image.presignedUrl) {
+			if let url = URL(string: img.image.url) {
 				
 				if Global.verbose {
-					print("image url : \(img.image.presignedUrl)")
+					print("image url : \(img.image.url)")
 					print("image seed : \(img.seed)")
 				}
 				
@@ -385,7 +444,7 @@ struct Firefly : AsyncParsableCommand {
 					continue
 				}
 			} else {
-				print("Error creating image URL. Skipping. [\(img.image.presignedUrl)]")
+				print("Error creating image URL. Skipping. [\(img.image.url)]")
 				continue
 			}
 			
