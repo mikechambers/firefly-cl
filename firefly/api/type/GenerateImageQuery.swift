@@ -33,14 +33,15 @@ struct GenerateImageQuery : Codable {
 	let prompt:String
 	let negativePrompt:String?
 	let contentClass:ContentClass?
-	let n:Int?//number of variations
+	let numVariations:Int?//number of variations
 	let size:ImageSize?
 	let seeds:[Int32]?
-	let locale:String?
+	let promptBiasingLocaleCode:String?
 	let visualIntensity : Int?
-	let styles:GenerateImageStyle?
+	let style:GenerateImageStyle?
 	let structure:GenerateImageStructure?
 	let photoSettings:PhotoSettings?
+	let tileable:Bool?
 	
 	init(prompt: String,
 		 negativePrompt: String? = nil,
@@ -50,22 +51,24 @@ struct GenerateImageQuery : Codable {
 		 seeds: [Int32]? = nil,
 		 locale: String? = nil,
 		 visualIntensity: Int? = nil,
-		 styles:GenerateImageStyle? = nil,
+		 style:GenerateImageStyle? = nil,
 		 structure:GenerateImageStructure? = nil,
-		 photoSettings:PhotoSettings? = nil
+		 photoSettings:PhotoSettings? = nil,
+		 tileable:Bool? = nil
 	) {
 		
 		self.prompt = prompt
 		self.negativePrompt = negativePrompt
 		self.contentClass = contentClass
-		self.n = n
+		self.numVariations = n
 		self.size = size
 		self.seeds = seeds
-		self.locale = locale
+		self.promptBiasingLocaleCode = locale
 		self.visualIntensity = visualIntensity
-		self.styles = styles
+		self.style = style
 		self.structure = structure
 		self.photoSettings = photoSettings
+		self.tileable = tileable
 	}
 }
 

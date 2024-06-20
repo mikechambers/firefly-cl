@@ -43,7 +43,7 @@ class AuthManager {
 		
 		var authToken = defaults.string(forKey: authTokenKey)
 		var expiresDate = defaults.object(forKey: authExpiresKey) as? Date
-		var clientId = defaults.string(forKey: clientIdKey)
+		let clientId = defaults.string(forKey: clientIdKey)
 
 		//check if we have a valid token, and it has not expired
 		if let expiresDate = expiresDate, Date.now <= expiresDate,

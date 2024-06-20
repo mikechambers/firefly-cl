@@ -45,6 +45,7 @@ struct Firefly : AsyncParsableCommand {
 	)
 
 
+	//This is option, because its not requires when --clear is passed in
 	@Option(name: .long, help: "Text prompt for image generation.")
 	var prompt: String?
 	
@@ -56,6 +57,9 @@ struct Firefly : AsyncParsableCommand {
 	
 	@Flag(name: .long, help: "Clear saved Firefly ID, Secret and authentication tokens.")
 	var clear: Bool = false
+	
+	@Flag(name: .long, help: "Whether the generated image is tileable.")
+	var tileable: Bool = false
 	
 	
 	@Option(
@@ -241,7 +245,7 @@ struct Firefly : AsyncParsableCommand {
 		}
 		
 		//this should be caught in validate, but we need to convert from Options
-		guard var outputDir = outputDir, var prompt = prompt else {
+		guard var outputDir = outputDir, let prompt = prompt else {
 			throw ValidationError("--output-dir and --prompt are required when --clear is not set")
 		}
 		
@@ -359,6 +363,8 @@ struct Firefly : AsyncParsableCommand {
 			structure = GenerateImageStructure(strength: structureStrength, imageReference: structRefImage)
 		}
 		
+		let t:Bool? = tileable ? true : nil;
+		
 		//overall query
 		let query = GenerateImageQuery(
 			prompt:prompt,
@@ -369,9 +375,10 @@ struct Firefly : AsyncParsableCommand {
 			seeds: seeds.isEmpty ? nil : seeds,
 			locale: locale,
 			visualIntensity: visualIntensity,
-			styles: style,
+			style: style,
 			structure:structure,
-			photoSettings: photoSettings
+			photoSettings: photoSettings,
+			tileable: t
 		)
 		
 		if Global.verbose {

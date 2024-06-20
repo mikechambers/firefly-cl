@@ -27,7 +27,7 @@ import Foundation
 struct Global {
 	
 	//Current app version
-	static let version = "0.85.2"
+	static let version = "0.85.3"
 	
 	//Where to print verbose output
 	static var verbose = false

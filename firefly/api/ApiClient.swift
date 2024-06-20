@@ -111,7 +111,7 @@ struct ApiClient {
 		let decoder:JSONDecoder = JSONDecoder()
 		
 		let jsonData = Data(body.utf8)
-	print(body)
+	
 		let response:T
 		do {
 			response = try decoder.decode(T.self, from: jsonData)

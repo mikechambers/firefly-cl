@@ -38,6 +38,16 @@ Requires the Python [Pillow library](https://python-pillow.org/) is installed.
 python3 styles.py --prompt "Big bang universe explosion, supernova blast, made out of colorful powder and dust, super detailed" --output-dir ~/tmp/fireflyOutput
 ```
 
+### svideo.py
+
+Python 3 script that takes a video and prompt, and then recreates the video using images generated from Adobe Firefly.
+
+```
+python3 svideo.py --source ~/tmp/video/input.mp4 --output-name output.mp4  --prompt "russian guy dancing" --fps 30 --styles cubism isometric
+```
+
+Requires that [ffmpeg](https://ffmpeg.org/) is installed and in path.
+
 ### rstyles.py
 
 Python 3 script that takes a prompt and randomly combines styles (based on your settings), to create images. Useful for finding unique, interesting style combinations.

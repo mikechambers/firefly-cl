@@ -31,7 +31,7 @@ struct GenerateImageResponse : Codable{
 	let size:ImageSize
 	
 	let outputs:[GenerateImageOutput]
-	let contentClass:ContentClass
+	//let contentClass:ContentClass
 }
 
 struct GenerateImageOutput : Codable {
