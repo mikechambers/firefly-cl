@@ -28,7 +28,7 @@ This will print out the latest documentation on how to use.
 You must specify your Firefly API id and secret in one of three ways:
 
 1. Pass in via the command line via the `--client-id` and `--client-secret` arguments
-2. Specify via `FIREFLY_CLIENT_ID` and `FIREFLY_CLIENT_SECRET`
+2. Specify via `FIREFLY_CLIENT_ID` and `FIREFLY_CLIENT_SECRET` environment variables
 3. Compiled into the app via _Secrets.swift_ file (see below)
 
 Note, if you do all three, they keys will be used in the order above, with the first found used.
