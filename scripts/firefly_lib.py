@@ -125,7 +125,6 @@ def run_firefly_command(prompt, output_dir, filename, width=2048, height=2048, o
     if options is not None:
         command.extend(options)
 
-    print(command)
     subprocess.run(command, check=True)
 
 def sanitize_filename(input_string):
