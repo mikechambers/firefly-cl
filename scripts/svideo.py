@@ -13,6 +13,7 @@ output_name = None
 working_dir = None
 
 images_per_second = None
+content_class = None
 
 styles = None
 
@@ -30,6 +31,7 @@ def main():
 
     seed = None
     count = 0
+    lastfile = None
     for filename in files:
 
         commands = []
@@ -41,12 +43,18 @@ def main():
 
         commands += ["--structure-image", filename]
         commands += ["--structure-strength", "100"]
+        commands += ["--content-class", content_class]
 
         if styles is not None:
             commands += ["--style-presets"]
             for s in styles:
                 commands += [s]
 
+        #if lastfile is not None:
+        #    commands += ["--reference-image", lastfile]
+        #    commands += ["--style-strength", "100"]
+
+        lastfile = filename
 
         output_file = f"{count}.jpg"
         count = count + 1
@@ -74,6 +82,8 @@ if __name__ == "__main__":
 
     parser.add_argument("--prompt", type=str, required=True, help="The prompt to use for generating an image.")
 
+    parser.add_argument("--content-class", dest="content_class", type=str, required=False, default="art", help="The prompt to use for generating an image.")
+
     parser.add_argument("--output-name", dest="output_name", type=str, required=True, help="The directory where the generated image will be saved.")
 
     parser.add_argument("--fps", type=int, required=False, default=3, help="Frames per second of final video. Will determine number of FPS to extract from original.")
@@ -85,6 +95,7 @@ if __name__ == "__main__":
     input_video = args.input_video
 
     images_per_second = args.fps
+    content_class = args.content_class
 
     working_dir = os.path.dirname(input_video)
 
