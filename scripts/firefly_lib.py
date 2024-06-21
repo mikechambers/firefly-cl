@@ -28,6 +28,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 #default delay in seconds between calls
 call_delay = 10
+DEFAULT_WIDTH = 2048
+DEFAULT_HEIGHT = 2048
 
 def create_images_from_video(input_video, output_dir, prefix="tmp_", images_per_second = 3):
     #ffmpeg -i input_video.mp4 -vf "fps=1" output_%04d.png
@@ -44,7 +46,7 @@ def create_images_from_video(input_video, output_dir, prefix="tmp_", images_per_
     subprocess.run(ffmpeg_command, check=True)
 
 
-def create_video_from_images(input_dir, filepath, images_per_second = 3, width=2048, height=2048):
+def create_video_from_images(input_dir, filepath, images_per_second = 3, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT):
 
     ffmpeg_command = [
         "ffmpeg",
@@ -85,7 +87,7 @@ def write_label_on_image(image_path, output_dir, label):
 
     text_color = "#333333"
 
-    im.text((2048/2, image.height - 25), label, anchor='mm', fill=text_color, font=mf)
+    im.text((DEFAULT_WIDTH/2, image.height - 25), label, anchor='mm', fill=text_color, font=mf)
 
     path = os.path.join(output_dir, f"{label}.jpg")
     image.save(path)
@@ -111,7 +113,7 @@ def create_pdf_from_images(folder_path, output_pdf_path):
     first_image.save(output_pdf_path, save_all=True, append_images=other_images)
     print(f"PDF created successfully: {output_pdf_path}")
 
-def run_firefly_command(prompt, output_dir, filename, width=2048, height=2048, options=None):
+def run_firefly_command(prompt, output_dir, filename, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, options=None):
     """Construct and run the firefly command with the selected styles."""
     command = [
         "firefly",
