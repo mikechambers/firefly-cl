@@ -58,16 +58,25 @@ def main():
                     for s in styles:
                         commands += [s]
 
-                #if lastfile is not None:
-                #    commands += ["--reference-image", lastfile]
-                #    commands += ["--style-strength", "100"]
+                if lastfile is not None:
+                    commands += ["--reference-image", lastfile]
+                    commands += ["--style-strength", "100"]
 
                 lastfile = filename
 
                 output_file = f"{count}.jpg"
                 count = count + 1
 
-                run_firefly_command(prompt, generated_dir, output_file, options=commands)
+                
+
+                try:
+                    run_firefly_command(prompt, generated_dir, output_file, options=commands)
+                except Exception as e:
+                    print("Error calling firefly. Sleeping 20 seconds")
+                    time.sleep(20)
+                    run_firefly_command(prompt, generated_dir, output_file, options=commands)
+
+
                 print(f"{count} of {len(files)}")
 
                 if seed is None:
